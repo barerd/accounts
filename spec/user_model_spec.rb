@@ -54,13 +54,14 @@ describe Authenticatable::Account do
 end
 
 describe Authenticatable::ActionToken do
-
-  it 'contains account id and confirmation tokens' do
-    pending
+  before (:all) do
+    @meg = Authenticatable::Account.create({ :email => 'meg@familyguy.com' })
+    @chris = Authenticatable::Account.create({ :email => 'chris@familyguy.com' })
   end
 
-  it 'can create a token for a specific action' do
-    pending
+  it 'can create a token for a user to perform a specific action' do
+    token = Authenticatable::ActionToken.create({ :account => @meg, :action => 'party' })
+    token.should be_saved
   end
 
   it 'creating a new token for an action removes any previous token' do

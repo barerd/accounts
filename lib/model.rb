@@ -3,14 +3,14 @@
 require 'data_mapper'
 require 'dm-types/enum'
 require 'dm-types/flag'
-require 'digest/sha1'
+require 'digest/sha2'
 
 DataMapper.setup(:default, ENV['DATABASE_URL'] || 'postgres:accounts')
 DataMapper::Property::String.length(255)
 DataMapper::Property::Boolean.allow_nil(false)
 DataMapper::Property::Boolean.default(false)
 
-#DataMapper::Model.raise_on_save_failure = true
+DataMapper::Model.raise_on_save_failure = true
 
 #=begin
 # Override definition in dm-core / lib / dm-core / resource.rb
@@ -69,9 +69,12 @@ module Authenticatable
   # An action-token represents permission for the agent to perform an action on behalf of a user.
   class ActionToken
     include DataMapper::Resource
-    property :token, String, :key => true
+
+    @@digest = Digest::SHA2.new
+
+    property :action, String, :unique => :account 
+    property :token, String, :key => true, :default => lambda { |res, tok| @@digest.hexdigest(rand.to_s) }
     belongs_to :account
-    property :action, String, :unique => :account
     property :expires, DateTime, :default => Time.new + 24 * 3600 # one day
   end
 
