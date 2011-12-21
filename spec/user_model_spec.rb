@@ -8,26 +8,48 @@ require 'model'
 describe Authenticatable::Account do
 
   it 'contains e-mails and passwords and flags' do
-    account = Authenticatable::Account.new ({:email => "stewie@foo.bar"})
-account.save
+    account = Authenticatable::Account.create ({:email => "stewie@family.guy"})
     account.should be_saved
     account.password.should be_nil
-    account.status.should be_nil
+    account.status.should have(0).flags
     account.last_logon.should be_nil
     account.created_at.should_not be_nil
     account.updated_at.should_not be_nil
   end
 
-  it 'new user e-mail is initially invalid' do
-    pending
+  it 'cannot create account with duplicate e-mail' do
+    account = Authenticatable::Account.create ({:email => "stewie@family.guy"})
+    account.should_not be_saved
   end
 
-  it 'stores passwords as hashes' do
-    pending
+  it 'new user e-mail is initially invalid' do
+    account = Authenticatable::Account.create ({:email => "lois@family.guy"})
+    #puts account.status.inspect
+    account.status.include?(:email_confirmed).should be_false
+    account.status.include?(:suspended).should be_false
+  end
+
+  it 'responds to .set_password' do
+    account = Authenticatable::Account.create ({:email => "brian@family.guy"})
+    account.respond_to? :set_password
+    account.set_password('hotforlois').should be_true
   end
 
   it 'can confirm password' do
-    pending
+    account = Authenticatable::Account.create ({:email => "peter@family.guy"})
+    account.set_password('notsosmart').should be_true
+    account.confirm_password('notsosmart').should be_true
+    account.confirm_password('notsobright').should be_false
+  end
+
+  it 'stores passwords as hashes' do
+    Authenticatable::Account.all.each do |acct|
+      if !acct.password.nil?
+        acct.password.is_a? String
+        acct.password.length == 64
+        acct.password !~ /[0-9a-f]/
+      end
+    end
   end
 end
 
