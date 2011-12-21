@@ -11,6 +11,7 @@ DataMapper::Property::Boolean.default(false)
 
 DataMapper::Model.raise_on_save_failure = true
 
+=begin
 # Override definition in dm-core / lib / dm-core / resource.rb
 # http://github.com/datamapper/dm-core/blob/master/lib/dm-core/resource.rb
 # Get it to log messages when there is a problem saving.
@@ -26,23 +27,23 @@ module DataMapper
       rescue
         STDERR.puts "Cannot save instance of #{self.class.to_s}"
         STDERR.puts self.pretty_inspect
-        self.errors.each {|e| puts e.to_s}
-        #raise "Cannot save instance of #{self.class.to_s}"
+        self.errors.each {|e| STDERR.puts e.to_s}
       end
     end
   end
 end
+=end
 
 module Authenticatable
 
   class Account
     include DataMapper::Resource
     property :id, Serial
-    has n, :action_tokens
-    property :email, String, :required => true
-    property :password, String, :required => true # a hash
-    property :status, Enum[:suspended, :email_confirmed]
-    property :last_logon, DateTime
+    property :email, String, :unique => true
+    property :password, String, :required => false # a hash
+    property :status, Enum[:suspended, :email_confirmed], :required => false
+    property :last_logon, DateTime, :required => false
+    timestamps :created_at
     timestamps :updated_at
   end
 
@@ -50,7 +51,7 @@ module Authenticatable
   class ActionToken
     include DataMapper::Resource
     property :token, String, :key => true
-    has 1, :account
+    belongs_to :account
     property :action, String, :unique => :account
     property :expires, DateTime, :default => Time.new + 24 * 3600 # one day
   end
