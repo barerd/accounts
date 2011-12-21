@@ -1,0 +1,10 @@
+source :rubygems
+gem 'logger'
+#gem 'sinatra'
+#gem 'thin'
+gem 'data_mapper'
+gem 'dm-types'
+gem 'dm-postgres-adapter'
+gem 'dm-timestamps'
+#gem 'dm-is-remixable'
+#gem 'haml'
