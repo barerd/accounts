@@ -67,7 +67,7 @@ describe Authenticatable::ActionToken do
     ta.id !~ /[0-9a-f]/
   end
 
-  it 'creating a new TokenAction for an action removes any previous token' do
+  it 'creating a new TokenAction for an action replaces any previous token' do
     tas = Authenticatable::ActionToken.all(:account => @meg, :action => 'party')
     tas.should_not be_nil
     tas.should have(1).item
