@@ -10,7 +10,7 @@ DataMapper::Property::String.length(255)
 DataMapper::Property::Boolean.allow_nil(false)
 DataMapper::Property::Boolean.default(false)
 
-DataMapper::Model.raise_on_save_failure = true
+#DataMapper::Model.raise_on_save_failure = true
 
 #=begin
 # Override definition in dm-core / lib / dm-core / resource.rb
@@ -23,13 +23,14 @@ module DataMapper
     #@@logger = Logger.new(STDOUT)
 
     def save(*a)
-      begin
-        orig_save(*a)
-      rescue
-        STDERR.puts "Cannot save instance of #{self.class.to_s}"
+      result = orig_save(*a)
+
+      if !result then
+        STDERR.puts "Cannot save #{self.class.to_s}"
         STDERR.puts self.pretty_inspect
         self.errors.each {|e| STDERR.puts e.to_s}
       end
+      result
     end
   end
 end
