@@ -60,25 +60,28 @@ describe Authenticatable::ActionToken do
   end
 
   it 'can create a token for a user to perform a specific action' do
-    token = Authenticatable::ActionToken.create({ :account => @meg, :action => 'party' })
-    token.should be_saved
-    token.id.is_a? String
-    token.id.length == 64
-    token.id !~ /[0-9a-f]/
+    ta = Authenticatable::ActionToken.create({ :account => @meg, :action => 'party' })
+    ta.should be_saved
+    ta.id.is_a? String
+    ta.id.length == 64
+    ta.id !~ /[0-9a-f]/
   end
 
-  it 'creating a new token for an action removes any previous token' do
-    tokens = Authenticatable::ActionToken.all(:account => @meg, :action => 'party')
-    tokens.should_not be_nil
-    tokens.should have(1).item
+  it 'creating a new TokenAction for an action removes any previous token' do
+    tas = Authenticatable::ActionToken.all(:account => @meg, :action => 'party')
+    tas.should_not be_nil
+    tas.should have(1).item
 
-    token = Authenticatable::ActionToken.create({ :account => @meg, :action => 'party' })
-    token.should be_saved
-    token.id.should_not == tokens[0].id
+    ta = Authenticatable::ActionToken.create({ :account => @meg, :action => 'party' })
+    ta.should be_saved
+    ta.id.should_not == tas[0].id
   end
 
   it 'can return account and action given token' do
-    pending
+    ta = Authenticatable::ActionToken.create({ :account => @chris, :action => 'act stupid' })
+    ta_found = Authenticatable::ActionToken.get(ta.id)
+    ta_found.account.should == @chris
+    ta_found.action.should == 'act stupid'
   end
 
   it 'has an expire date' do
