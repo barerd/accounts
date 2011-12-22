@@ -62,10 +62,19 @@ describe Authenticatable::ActionToken do
   it 'can create a token for a user to perform a specific action' do
     token = Authenticatable::ActionToken.create({ :account => @meg, :action => 'party' })
     token.should be_saved
+    token.id.is_a? String
+    token.id.length == 64
+    token.id !~ /[0-9a-f]/
   end
 
   it 'creating a new token for an action removes any previous token' do
-    pending
+    tokens = Authenticatable::ActionToken.all(:account => @meg, :action => 'party')
+    tokens.should_not be_nil
+    tokens.should have(1).item
+
+    token = Authenticatable::ActionToken.create({ :account => @meg, :action => 'party' })
+    token.should be_saved
+    token.id.should_not == tokens[0].id
   end
 
   it 'can return account and action given token' do

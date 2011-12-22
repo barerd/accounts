@@ -72,10 +72,22 @@ module Authenticatable
 
     @@digest = Digest::SHA2.new
 
+    property :id, String, :key => true, :default => lambda { |res, tok| @@digest.hexdigest(rand.to_s) }
     property :action, String, :unique => :account 
-    property :token, String, :key => true, :default => lambda { |res, tok| @@digest.hexdigest(rand.to_s) }
     belongs_to :account
     property :expires, DateTime, :default => Time.new + 24 * 3600 # one day
+
+    # override .save
+    # @see http://blog.jayfields.com/2006/12/ruby-alias-method-alternative.html
+    base_save = self.instance_method(:save)
+
+    define_method(:save) do |*args|
+      # If there is a previous instance, delete it
+      if self.class.all *args then
+        self.class.destroy *args
+      end
+      base_save.bind(self).call *args
+    end
   end
 
 end
