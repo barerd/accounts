@@ -85,6 +85,9 @@ describe Authenticatable::ActionToken do
   end
 
   it 'has an expire date' do
-    pending
+    Authenticatable::ActionToken.all.each do |ta|
+      ta.expires.should be_kind_of DateTime
+      ta.expires.should > DateTime.new
+    end
   end
 end
