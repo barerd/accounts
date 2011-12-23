@@ -8,3 +8,9 @@ gem 'dm-timestamps'
 gem 'dm-postgres-adapter'
 #gem 'dm-is-remixable'
 #gem 'haml'
+
+group :test do
+  gem 'rspec'
+  gem 'cucumber'
+  gem 'capybara'
+end
