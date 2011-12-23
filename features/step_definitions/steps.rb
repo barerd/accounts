@@ -10,10 +10,6 @@ Then /^"([^"]*)" is suspended$/ do |arg1|
   pending # express the regexp above with the code you wish you had
 end
 
-Given /^"([^"]*)" receives email with register\-confirmation link$/ do |arg1|
-  pending # express the regexp above with the code you wish you had
-end
-
 When /^"([^"]*)" visits registration\-confirmation link$/ do |arg1|
   pending # express the regexp above with the code you wish you had
 end

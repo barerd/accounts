@@ -42,7 +42,7 @@ fi
 #
 #filename=".gems"
 filename="Gemfile"
-if [[ -s "$filename" ]] ; then
+if false && [[ -s "$filename" ]] ; then
   rvm gemset import "$filename" | grep -v already | grep -v listed | grep -v complete | sed '/^$/d'
 fi
 
@@ -50,3 +50,4 @@ fi
 if command -v bundle && [[ -s Gemfile ]] ; then
   bundle install
 fi
+rvm current

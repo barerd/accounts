@@ -4,18 +4,19 @@ ENV['RACK_ENV'] = 'test'
 
 require File.join(File.dirname(__FILE__), '..', '..', 'lib/server.rb')
 
-require 'capybara'
+require 'rubygems'
+require 'bundler/setup'
+Bundler.require(:test)
 require 'capybara/cucumber'
-require 'rspec'
 
-Capybara.app = accounts
+Capybara.app = Sinatra::Application::new
 
-class accountsWorld
+class AccountsWorld
   include Capybara::DSL
   include RSpec::Expectations
   include RSpec::Matchers
 end
 
 World do
-  accountsWorld.new
+  AccountsWorld.new
 end
