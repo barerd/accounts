@@ -7,16 +7,16 @@ Feature: A website needs to maintain user accounts with e-mail and secure passwo
     And "alice@wunderland.com" is suspended
 
   Scenario: Confirm registration
-    Given "alice@wunderland.com" receives register-confirmation email
+    Given "alice@wunderland.com" receives email with register-confirmation link
     When "alice@wunderland.com" visits registration-confirmation link
     Then "alice@wunderland.com" is authenticated
     And "alice@wunderland.com" e-mail is confirmed
-    And administrator receives email with registration confirmation
+    And administrator receives email with registration notification
     And "alice@wunderland.com" can change password to "lookingglass"
     And register-confirmation link will return page-not-found
 
   Scenario: Request to reset password
-    When "alice@wunderland.com" requests to reset password
+    When "alice@wunderland.com" submits request to reset password
     Then "alice@wunderland.com" receives e-mail with reset-password link
 
   Scenario: Visit reset-password link
@@ -25,7 +25,7 @@ Feature: A website needs to maintain user accounts with e-mail and secure passwo
     And "alice@wunderland.com" can change password to "grasshopper"
 
   Scenario: Request to change e-mail
-    When "alice@wunderland.com" requests to change e-mail to "rabbit@hole.com"
+    When "alice@wunderland.com" submits request to change e-mail to "rabbit@hole.com"
     Then "rabbit@hole.com" receives email with change-email-confirmation link
     And "alice@wunderland.com" receives email with change-email-notification message and dispute-change-email link
 

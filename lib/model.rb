@@ -19,11 +19,14 @@ DataMapper::Property::Boolean.default(false)
 module DataMapper
   module Resource
 
-    alias_method :orig_save, :save
     #@@logger = Logger.new(STDOUT)
 
-    def save(*a)
-      result = orig_save(*a)
+    # override .save
+    # @see http://blog.jayfields.com/2006/12/ruby-alias-method-alternative.html
+    base_save = self.instance_method(:save)
+
+    define_method(:save) do |*a|
+      result = base_save.bind(self).call(*a)
 
       if !result then
         STDERR.puts "Cannot save #{self.class.to_s}"
