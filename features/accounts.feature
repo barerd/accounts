@@ -1,6 +1,11 @@
 Feature: A website needs to maintain user accounts with e-mail and secure password
   Users must have a way to reset their e-mails and passwords
 
+  @signon-form
+  Scenario: Display the logon page to unauthenticated visitors
+    When someone visits "/logon"
+    Then they see the logon form
+
   Scenario: Request to register
     When "alice@wunderland.com" registers 
     Then "alice@wunderland.com" receives email with register-confirmation link
