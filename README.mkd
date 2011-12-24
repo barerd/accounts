@@ -1,0 +1,66 @@
+# Accounts
+
+## Summary
+*accounts* is a demo website that offers nothing more than the basic user-account management
+and authentication features that many sites need.
+
+## Background
+
+Most sites I've built require a user authentication and user-account management features.
+These include:
+* Registering a new user
+* Authenticating (logging-on)
+* Verifying a user's e-mail
+* Modifying a user's e-mail
+* Resetting a user's password
+* Suspending a user's account
+
+I would much rather delegate these features to an OpenID/Oauth service,
+In other words, let a user authenticate to a third party that we both trust 
+(at least for the purpose we're using them for here)
+such as Yahoo or Facebook or Google 
+who will then present a token to my client's site representing that the user has been authenticated.
+
+Nevertheless, many of my clients and prospective clients have insisted that
+their sites manage these features without requiring their customers to authenticate through a third party.
+
+So I'm left again reinventing the same old authentication and account-management features every time.
+The pages look different and the details may be slightly different each time
+- some sites want to know their subscribers' full name, home address and phone number,
+others just want an e-mail -
+but the features and use-cases are nearly identical.
+
+## Description
+*accounts* is a demo website that offers nothing more than the basic user-account management
+and authentication features that many sites need.
+It is intended by its author 
+to be copied and used as a template in other sites that require these same features.
+
+*accounts* supports a very lean and minimal user-registration protocol.
+
+1. A user who wants to register need submit nothing more than a valid e-mail.
+1. The service will attempt to e-mail a unique URI to the address they have given.
+1. When the new registree candidate visits that URI (presumably by clicking),
+that e-mail (and their identity) may be considered as valid.
+1. The new registree is then invited to create and verify a password.
+
+This and other use cases are described in the Cucumber *features* documents and behavioral tests.
+
+*accounts* makes a few assumptions:
+
+1. Each subscriber to a site can be uniquely identified by whatever e-mail address he submits.
+1. Any site that manages user identity and authentication will be hosted as an HTTPS (Secure HTTP) service, 
+meaning that the service must present a signed digital certificate to the browser
+and all traffic to and from the service, including the user's authentication credentials, are encrypted.
+
+## Status
+Work-in-progress.
+
+## Disclaimer
+
+Lawrence Siden and Westside Consulting LLC 
+make no warranty about this demo-site's security, correctness or fitness for commercial use.
+
+## License
+* <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">accounts</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://westside-consulting.com/" property="cc:attributionName" rel="cc:attributionURL">Lawrence Siden</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/lsiden" rel="dct:source">github.com</a>.
+* [Ruby License](http://www.ruby-lang.org/en/LICENSE.txt)
