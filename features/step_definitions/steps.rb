@@ -66,14 +66,6 @@ Given /^"([^"]*)" receives email with change\-email\-notification message and di
   pending # express the regexp above with the code you wish you had
 end
 
-Given /^"([^"]*)" visits change\-email link$/ do |arg1|
-  pending # express the regexp above with the code you wish you had
-end
-
-Given /^user "([^"]*)" does not exist$/ do |arg1|
-  pending # express the regexp above with the code you wish you had
-end
-
 Given /^"([^"]*)" visits dispute\-change\-email link$/ do |arg1|
   pending # express the regexp above with the code you wish you had
 end
@@ -87,6 +79,34 @@ Given /^"([^"]*)" receives email with dispute confirmation$/ do |arg1|
 end
 
 Given /^administrator receives email with dispute confirmation$/ do
+  pending # express the regexp above with the code you wish you had
+end
+
+Given /^"([^"]*)" has already confirmed her registration$/ do |arg1|
+  pending # express the regexp above with the code you wish you had
+end
+
+When /^"([^"]*)" visits stale registration\-confirmation link$/ do |arg1|
+  pending # express the regexp above with the code you wish you had
+end
+
+Then /^response is redirected to "([^"]*)"$/ do |arg1|
+  pending # express the regexp above with the code you wish you had
+end
+
+Given /^"([^"]*)" has already visited reset\-password link$/ do |arg1|
+  pending # express the regexp above with the code you wish you had
+end
+
+When /^someone visits "([^"]*)"$/ do |arg1|
+  pending # express the regexp above with the code you wish you had
+end
+
+Given /^that "([^"]*)" is authenticated$/ do |arg1|
+  pending # express the regexp above with the code you wish you had
+end
+
+When /^"([^"]*)" visits "([^"]*)"$/ do |arg1, arg2|
   pending # express the regexp above with the code you wish you had
 end
 

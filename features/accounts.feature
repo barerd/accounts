@@ -1,19 +1,15 @@
+@transactions
 Feature: A website needs to maintain user accounts with e-mail and secure password
   Users must have a way to reset their e-mails and passwords
 
-  @signon-form
-  Scenario: Display the logon page to unauthenticated visitors
-    When someone visits "/logon"
-    Then page has "form input[@type='text'][@name='email']"
-    And page has "form input[@type='password'][@name='password']"
-    And page has "form button[@type='submit']"
-    And page has "link[@href='/reset-password']"
-    And page has "link[@href='/register']"
-
-  Scenario: Request to register
+  Scenario: Unauthenticated user requests to register
     When "alice@wunderland.com" registers 
     Then "alice@wunderland.com" receives email with register-confirmation link
     And "alice@wunderland.com" is suspended
+
+  Scenario: Registered user requests to register
+    When "alice@wunderland.com" registers 
+    Then page has "text('You are already registered')"
 
   Scenario: Confirm registration
     Given "alice@wunderland.com" receives email with register-confirmation link
@@ -24,6 +20,11 @@ Feature: A website needs to maintain user accounts with e-mail and secure passwo
     And "alice@wunderland.com" can change password to "lookingglass"
     And register-confirmation link will return page-not-found
 
+  Scenario: Confirm registration with stale link
+    Given "alice@wunderland.com" has already confirmed her registration
+    When "alice@wunderland.com" visits stale registration-confirmation link
+    Then response is redirected to "/"
+
   Scenario: Request to reset password
     When "alice@wunderland.com" submits request to reset password
     Then "alice@wunderland.com" receives e-mail with reset-password link
@@ -33,16 +34,15 @@ Feature: A website needs to maintain user accounts with e-mail and secure passwo
     Then "alice@wunderland.com" is authenticated
     And "alice@wunderland.com" can change password to "grasshopper"
 
+  Scenario: Visit stale reset-password link
+    Given "alice@wunderland.com" has already visited reset-password link
+    When "alice@wunderland.com" visits reset-password link
+    Then response is redirected to "/"
+
   Scenario: Request to change e-mail
     When "alice@wunderland.com" submits request to change e-mail to "rabbit@hole.com"
     Then "rabbit@hole.com" receives email with change-email-confirmation link
     And "alice@wunderland.com" receives email with change-email-notification message and dispute-change-email link
-
-  Scenario: Visit change-email link
-    When "rabbit@hole.com" visits change-email link
-    Then "rabbit@hole.com" is authenticated
-    And "rabbit@hole.com" e-mail is confirmed
-    And user "alice@wunderland.com" does not exist
 
   Scenario: Receive change-email notification
     When "alice@wunderland.com" visits dispute-change-email link
