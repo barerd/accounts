@@ -2,8 +2,8 @@ Given /^someone visits "\/logon"/ do
   visit '/'
 end
 
-Given /^they see the logon form$/ do
-  (page.has_content? 'Sign in') .should be_true
+Then /^page has "([^"]*)"$/ do |arg1|
+  page.should have_selector(arg1)
 end
 
 Given /^"([^"]*)" registers$/ do |arg1|

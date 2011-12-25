@@ -4,7 +4,11 @@ Feature: A website needs to maintain user accounts with e-mail and secure passwo
   @signon-form
   Scenario: Display the logon page to unauthenticated visitors
     When someone visits "/logon"
-    Then they see the logon form
+    Then page has "form input[@type='text'][@name='email']"
+    And page has "form input[@type='password'][@name='password']"
+    And page has "form button[@type='submit']"
+    And page has "link[@href='/reset-password']"
+    And page has "link[@href='/register']"
 
   Scenario: Request to register
     When "alice@wunderland.com" registers 
