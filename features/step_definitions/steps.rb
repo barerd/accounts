@@ -1,7 +1,3 @@
-Given /^someone visits "\/logon"/ do
-  visit '/'
-end
-
 Then /^page has "([^"]*)"$/ do |arg1|
   page.should have_selector(arg1)
 end
