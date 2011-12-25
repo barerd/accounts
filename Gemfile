@@ -7,7 +7,7 @@ gem 'dm-types'
 gem 'dm-timestamps'
 gem 'dm-postgres-adapter'
 #gem 'dm-is-remixable'
-#gem 'haml'
+gem 'haml'
 
 group :test do
   gem 'capybara'

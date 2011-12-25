@@ -3,5 +3,5 @@ require 'bundler/setup'
 Bundler.require(:default)
 
 get '/' do
-  "Welcome"
+  haml :login
 end
