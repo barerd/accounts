@@ -6,7 +6,7 @@ Feature: This demo app has the following pages
     When someone visits "/logon"
     Then page has "form input[@type='text'][@name='email']"
     And page has "form input[@type='password'][@name='password']"
-    And page has "form button[@type='submit'][@value='submit']"
+    And page has "form button[@type='submit'][@value='Submit']"
     And page has "link[@href='/reset-password']"
     And page has "link[@href='/register']"
 

@@ -95,7 +95,7 @@ Given /^"([^"]*)" has already visited reset\-password link$/ do |arg1|
 end
 
 When /^someone visits "([^"]*)"$/ do |arg1|
-  pending # express the regexp above with the code you wish you had
+  visit arg1
 end
 
 Given /^that "([^"]*)" is authenticated$/ do |arg1|

@@ -7,5 +7,9 @@ get '/' do
 end
 
 get '/logon' do
-  haml :login
+  haml :logon
+end
+
+get '/register' do
+  haml :register
 end
