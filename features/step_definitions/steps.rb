@@ -46,6 +46,15 @@ Given /^"([^"]*)" submits request to reset password$/ do |arg1|
   end
 end
 
+# Javascipt injection example
+Given /^{([^}]*)} submits request to reset password$/ do |arg1|
+  visit '/forgot-password'
+  with_scope('form.forgot_password') do
+    fill_in('email', :with => arg1)
+    click_button("Submit")
+  end
+end
+
 Given /^"([^"]*)" receives e\-mail with reset\-password link$/ do |arg1|
   pending # express the regexp above with the code you wish you had
 end
@@ -108,4 +117,8 @@ end
 
 When /^"([^"]*)" visits "([^"]*)"$/ do |arg1, arg2|
   pending # express the regexp above with the code you wish you had
+end
+
+When /^I should see raw html: "([^"]*)"$/ do |arg1|
+  page.html.should match /#{arg1}/ 
 end
