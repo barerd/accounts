@@ -1,17 +1,21 @@
 !!!
 
-Sign in:
+%html{html_attrs}
 
-%form#login_form
-  .label_input
-    %label{:for=>"email"} E-mail
-    %input{:name=>"email", :id=>"email", :type=>"text"} 
-  .label_input
-    %label{:for=>"password"} Password
-    %input{:name=>"password", :id=>"password", :type=>"password"} 
-  .button
-    %button{:type => "submit", :value => "Submit"}
-  .reset_password
-    %link{:href=>"/reset-password"} Reset your password.
-  .register
-    %link{:href=>"/register"} Register!
+  %body
+
+    %h1 Sign in
+
+    %form#login_form
+      .label_input
+        %label{:for=>"email"} E-mail
+        %input{:name=>"email", :id=>"email", :type=>"text"} 
+      .label_input
+        %label{:for=>"password"} Password
+        %input{:name=>"password", :id=>"password", :type=>"password"} 
+      .button
+        %button{:type => "submit", :value => "Submit"}
+      .reset_password
+        %link{:href=>"/reset-password"} Reset your password.
+      .register
+        %link{:href=>"/register"} Register!

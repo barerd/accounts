@@ -39,7 +39,11 @@ Given /^register\-confirmation link will return page\-not\-found$/ do
 end
 
 Given /^"([^"]*)" submits request to reset password$/ do |arg1|
-  pending # express the regexp above with the code you wish you had
+  visit '/forgot-password'
+  with_scope('form.forgot_password') do
+    fill_in('email', :with => arg1)
+    click_button("Submit")
+  end
 end
 
 Given /^"([^"]*)" receives e\-mail with reset\-password link$/ do |arg1|
@@ -105,9 +109,3 @@ end
 When /^"([^"]*)" visits "([^"]*)"$/ do |arg1, arg2|
   pending # express the regexp above with the code you wish you had
 end
-
-Given /^that "([^"]*)" submitted a reset\-password request$/ do |arg1|
-  visit '/reset-password'
-  pending
-end
-

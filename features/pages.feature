@@ -24,8 +24,8 @@ Feature: This demo app has the following pages
 
   @forgot-password-confirm
   Scenario: Display the request reset password confirmation page
-    Given that "alice@wunderland.com" submitted a reset-password request
-    Then page has contents "We are sending an e-mail to alice@wunderland.com with a line-time link"
+    When "alice@wunderland.com" submits request to reset password
+    Then I should see "We are sending an e-mail to alice@wunderland.com with a one-time link"
 
   @reset-password
   Scenario: Display the request reset password page to unauthenticated visitors

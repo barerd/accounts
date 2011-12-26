@@ -19,5 +19,6 @@ get '/forgot-password' do
 end
 
 post '/forgot-password' do
-  haml :forgot_password_comfirm
+  @email = params[:email]
+  haml :forgot_password_confirm
 end
