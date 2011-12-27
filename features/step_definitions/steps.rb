@@ -19,8 +19,8 @@ When /^"([^"]*)" has received email with register\-confirmation link$/ do |arg1|
     And she presses "Submit"
   }
   Mail::TestMailer.deliveries.accounts.should include(arg1)
-  @alice_register_confirmation_mail = Mail::TestMailer.deliveries.get(arg1)
-  @alice_register_confirmation_mail.should_not be_nil
+  @last_register_confirmation_mail = Mail::TestMailer.deliveries.get(arg1)
+  @last_register_confirmation_mail.should_not be_nil
 end
 
 When /^"([^"]*)" is suspended$/ do |arg1|
@@ -28,10 +28,11 @@ When /^"([^"]*)" is suspended$/ do |arg1|
 end
 
 When /^"([^"]*)" visits registration\-confirmation link$/ do |arg1|
-  @alice_register_confirmation_mail.should_not be_nil
-  @alice_register_confirmation_mail.body.to_s =~ /change your password: (http\S+)/
+  @last_register_confirmation_mail.should_not be_nil
+  @last_register_confirmation_mail.body.to_s =~ /change your password: (http\S+)/
   link = $1
   link.should_not be_nil
+STDERR.puts "link = #{link}"
   visit link
 end
 
@@ -108,10 +109,6 @@ When /^administrator receives email with dispute confirmation$/ do
   pending # express the regexp above with the code you wish you had
 end
 
-When /^"([^"]*)" has already confirmed her registration$/ do |arg1|
-  pending # express the regexp above with the code you wish you had
-end
-
 When /^"([^"]*)" visits stale registration\-confirmation link$/ do |arg1|
   pending # express the regexp above with the code you wish you had
 end
@@ -142,7 +139,14 @@ end
 
 Then /^"([^"]*)" should receive email containing "([^"]*)"$/ do |arg1, arg2|
   Mail::TestMailer.deliveries.accounts.should include(arg1)
-  @alice_register_confirmation_mail = Mail::TestMailer.deliveries.get(arg1)
-  @alice_register_confirmation_mail.body.should match(arg2)
+  @last_register_confirmation_mail = Mail::TestMailer.deliveries.get(arg1)
+  @last_register_confirmation_mail.body.should match(arg2)
 end
 
+When /^"([^"]*)" has already confirmed her registration$/ do |arg1|
+  visit '/register'
+  fill_in("email", :with => arg1)
+  click_button("Submit")
+  @last_register_confirmation_mail = Mail::TestMailer.deliveries.get(arg1)
+  @last_register_confirmation_mail.should_not be_nil
+end

@@ -7,7 +7,7 @@ Feature: Visitors can register
     Then page has "form input[@type='text'][@name='email']"
     And page has "form button[@type='submit']"
 
-  @registers @registers-again @confirms-registration
+  @registers @registers-again @confirms-registration @registers-once
   Scenario: Unregistered user requests to register
     Given "alice@wunder.land" is not registered
     When she visits "/register"
@@ -34,5 +34,6 @@ Feature: Visitors can register
 
   Scenario: Confirm registration with stale link
     Given "alice@wunder.land" has already confirmed her registration
-    When "alice@wunder.land" visits stale registration-confirmation link
+    When "alice@wunder.land" visits registration-confirmation link
     Then response should be "page not found"
+    And "admin@accounts.test" should not receive email containing "alice@wunder.land has registered and confirmed"

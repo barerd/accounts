@@ -87,10 +87,19 @@ module Authenticatable
 
     define_method(:save) do |*args|
       # If there is a previous instance, delete it
-      if self.class.all *args then
-        self.class.destroy *args
+      if self.class.count(:action => self.action, :account => self.account)  then
+        self.class.destroy
       end
-      base_save.bind(self).call *args
+      result = base_save.bind(self).call *args
+      #STDERR.puts "#{self.inspect}.save returned #{result}"
+    end
+
+    base_destroy = self.instance_method(:destroy)
+
+    define_method(:destroy) do |*args|
+      # If there is a previous instance, delete it
+      result = base_destroy.bind(self).call *args
+      #STDERR.puts "#{self.inspect}.destroy returned #{result}"
     end
   end
 
