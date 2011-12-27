@@ -28,10 +28,16 @@ end
 
 post '/register' do
   @email = params[:email]
+
   if ( Authenticatable::Account.count( :email => @email ) != 0) then
     return %Q{#{@email} is already registered.  Please <a href="/logon">log on</a>.}
   end
-  Accounts::Helpers.mail_registration_confirmation @email
+  account = Authenticatable::Account.create ({ :email => @email })
+
+  if !account.saved? then
+    return "Sorry. We cannot register you at this time.  Try again later."
+  end
+  Accounts::Helpers.mail_registration_confirmation account
   haml :register_confirm
 end
 
