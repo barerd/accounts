@@ -7,7 +7,7 @@ Feature: Visitors can register
     Then page has "form input[@type='text'][@name='email']"
     And page has "form button[@type='submit']"
 
-  @registers
+  @registers @registers-again @confirms-registration
   Scenario: Unregistered user requests to register
     Given "alice@wunder.land" is not registered
     When she visits "/register"
@@ -24,7 +24,7 @@ Feature: Visitors can register
     And she presses "Submit"
     Then page has content "alice@wunder.land is already registered"
 
-  @registers-again
+  @registers @confirms-registration
   Scenario: Confirm registration
     Given "alice@wunder.land" has received email with register-confirmation link
     When "alice@wunder.land" visits registration-confirmation link

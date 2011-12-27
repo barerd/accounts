@@ -13,6 +13,7 @@ When /^"([^"]*)" registers$/ do |arg1|
 end
 
 When /^"([^"]*)" has received email with register\-confirmation link$/ do |arg1|
+  STDERR.puts self
   @alice_register_confirmation_mail.should_not be_nil
 end
 
@@ -125,17 +126,14 @@ When /^I should see raw html: "([^"]*)"$/ do |arg1|
   page.html.should match /#{arg1}/ 
 end
 
-When /^"([^"]*)" is registered$/ do |arg1|
-  Authenticatable::Account.all( :email => arg1 ).should have(1).item
-end
-
-When /^"([^"]*)" is not registered$/ do |arg1|
-  Authenticatable::Account.all( :email => arg1 ).should have(0).items
+When /^"([^"]*)" is (not )?registered$/ do |arg1, bool|
+  Authenticatable::Account.all( :email => arg1 ).should have(bool ? 0 : 1).items
 end
 
 Then /^"([^"]*)" should receive email containing "([^"]*)"$/ do |arg1, arg2|
   Mail::TestMailer.deliveries.accounts.should include(arg1)
   @alice_register_confirmation_mail = Mail::TestMailer.deliveries.get(arg1)
   @alice_register_confirmation_mail.body.should match(arg2)
+  STDERR.puts self
 end
 
