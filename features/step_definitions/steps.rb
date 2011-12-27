@@ -1,5 +1,10 @@
 When /^page has "([^"]*)"$/ do |arg1|
   #STDERR.puts page.body
+  page.body.should have_selector(arg1)
+end
+
+When /^page has content "([^"]*)"$/ do |arg1|
+  #STDERR.puts page.body
   page.body.should have_content(arg1)
 end
 
@@ -8,7 +13,7 @@ When /^"([^"]*)" registers$/ do |arg1|
 end
 
 When /^"([^"]*)" has received email with register\-confirmation link$/ do |arg1|
-  pending # express the regexp above with the code you wish you had
+  @alice_register_confirmation_mail.should_not be_nil
 end
 
 When /^"([^"]*)" is suspended$/ do |arg1|
@@ -130,6 +135,7 @@ end
 
 Then /^"([^"]*)" should receive email containing "([^"]*)"$/ do |arg1, arg2|
   Mail::TestMailer.deliveries.accounts.should include(arg1)
-  Mail::TestMailer.deliveries.get(arg1).body.should match(arg2)
+  @alice_register_confirmation_mail = Mail::TestMailer.deliveries.get(arg1)
+  @alice_register_confirmation_mail.body.should match(arg2)
 end
 

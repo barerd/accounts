@@ -22,10 +22,11 @@ Feature: Visitors can register
     When she visits "/register"
     And she fills in "email" with "alice@wunder.land" 
     And she presses "Submit"
-    Then page has "alice@wunder.land is already registered"
+    Then page has content "alice@wunder.land is already registered"
 
+  @registers-again
   Scenario: Confirm registration
-    Given "alice@wunder.land" receives email with register-confirmation link
+    Given "alice@wunder.land" has received email with register-confirmation link
     When "alice@wunder.land" visits registration-confirmation link
     Then "alice@wunder.land" is authenticated
     And "alice@wunder.land" e-mail is confirmed
