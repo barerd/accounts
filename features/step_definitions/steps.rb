@@ -119,8 +119,12 @@ Given /^I should see raw html: "([^"]*)"$/ do |arg1|
   page.html.should match /#{arg1}/ 
 end
 
+Given /^"([^"]*)" is registered$/ do |arg1|
+  Authenticatable::Account.all( :email => arg1 ).should have(1).item
+end
+
 Given /^"([^"]*)" is not registered$/ do |arg1|
-  #pending # express the regexp above with the code you wish you had
+  Authenticatable::Account.all( :email => arg1 ).should have(0).items
 end
 
 Then /^"([^"]*)" should receive email containing "([^"]*)"$/ do |arg1, arg2|

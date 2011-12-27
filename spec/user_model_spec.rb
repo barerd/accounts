@@ -68,13 +68,13 @@ describe Authenticatable::ActionToken do
   end
 
   it 'creating a new TokenAction for an action replaces any previous token' do
-    toks = Authenticatable::ActionToken.all(:account => @meg, :action => 'party')
-    toks.should_not be_nil
-    toks.should have(1).item
+    tas = Authenticatable::ActionToken.all(:account => @meg, :action => 'party')
+    tas.should_not be_nil
+    tas.should have(1).item
 
     tok = Authenticatable::ActionToken.create({ :account => @meg, :action => 'party' })
     tok.should be_saved
-    tok.id.should_not == toks[0].id
+    tok.id.should_not == tas[0].id
   end
 
   it 'can return account and action given token' do
