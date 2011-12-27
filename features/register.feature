@@ -35,5 +35,5 @@ Feature: Visitors can register
   Scenario: Confirm registration with stale link
     Given "alice@wunder.land" has already confirmed her registration
     When "alice@wunder.land" visits registration-confirmation link
-    Then response should be "page not found"
+    Then Alice should see "Page not found"
     And "admin@accounts.test" should not receive email containing "alice@wunder.land has registered and confirmed"

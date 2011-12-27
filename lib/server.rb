@@ -14,6 +14,10 @@ helpers do
   include Accounts::Helpers
 end
 
+not_found do
+  %Q{Page not found.  Go to <a href="home">home page</a>.}
+end
+
 get '/' do
   "Welcome"
 end
