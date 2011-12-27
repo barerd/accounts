@@ -107,7 +107,7 @@ Given /^"([^"]*)" has already visited reset\-password link$/ do |arg1|
   pending # express the regexp above with the code you wish you had
 end
 
-When /^someone visits "([^"]*)"$/ do |arg1|
+When /^\w+ visits? "([^"]*)"$/ do |arg1|
   visit arg1
 end
 
@@ -115,10 +115,11 @@ Given /^that "([^"]*)" is authenticated$/ do |arg1|
   pending # express the regexp above with the code you wish you had
 end
 
-When /^"([^"]*)" visits "([^"]*)"$/ do |arg1, arg2|
-  pending # express the regexp above with the code you wish you had
-end
-
 When /^I should see raw html: "([^"]*)"$/ do |arg1|
   page.html.should match /#{arg1}/ 
 end
+
+Given /^"([^"]*)" is not registered$/ do |arg1|
+  #pending # express the regexp above with the code you wish you had
+end
+

@@ -14,6 +14,11 @@ get '/register' do
   haml :register
 end
 
+post '/register' do
+  @email = params[:email]
+  haml :register_confirm
+end
+
 get '/forgot-password' do
   haml :forgot_password
 end

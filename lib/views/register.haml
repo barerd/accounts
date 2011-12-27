@@ -6,9 +6,9 @@
 
     %h1 Register
 
-    %form#login_form
+    %form#login_form{:action => '/register', :method => 'post'}
       .label_input
         %label{:for=>"email"} E-mail
         %input{:name=>"email", :id=>"email", :type=>"text"} 
       .button
-        %button{:type => "submit", :value => "Submit"}
+        %button{:type => "submit"} Submit
