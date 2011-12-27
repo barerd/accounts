@@ -17,6 +17,8 @@ class AccountsWorld
   include RSpec::Matchers
 end
 
-World do
-  AccountsWorld.new
+World do |;world|
+  world = AccountsWorld.new
+  #STDERR.puts world.class.included_modules
+  #File.open("/tmp/methods.txt", "w").puts world.methods 
 end

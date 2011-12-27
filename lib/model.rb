@@ -97,9 +97,4 @@ module Authenticatable
 end
 
 DataMapper.finalize
-
-if ENV['DEVEL'] then
-  DataMapper.auto_migrate!  # empty database
-else
-  DataMapper.auto_upgrade!  # preserve existing database
-end
+DataMapper.auto_upgrade!  # preserve existing database

@@ -1,6 +1,7 @@
 @register
 Feature: Visitors can register
 
+  @registration-page
   Scenario: Display the registration page to unauthenticated visitors
     When someone visits "/register"
     Then page has "form input[@type='text'][@name='email']"
@@ -15,9 +16,13 @@ Feature: Visitors can register
     Then I should see "We are sending an e-mail to alice@wunder.land with a one-time link"
     And "alice@wunder.land" should receive email containing "http://accounts.test/response-token/"
 
+  @registers-again
   Scenario: Registered user requests to register
-    When "alice@wunder.land" registers 
-    Then page has "text('You are already registered')"
+    Given "alice@wunder.land" is registered
+    When she visits "/register"
+    And she fills in "email" with "alice@wunder.land" 
+    And she presses "Submit"
+    Then page has "alice@wunder.land is already registered"
 
   Scenario: Confirm registration
     Given "alice@wunder.land" receives email with register-confirmation link

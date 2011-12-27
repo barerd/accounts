@@ -1,5 +1,6 @@
 Given /^page has "([^"]*)"$/ do |arg1|
-  page.should have_selector(arg1)
+  #STDERR.puts page.body
+  page.body.should have_content(arg1)
 end
 
 Given /^"([^"]*)" registers$/ do |arg1|
