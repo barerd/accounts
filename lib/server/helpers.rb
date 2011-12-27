@@ -24,8 +24,8 @@ module Accounts
       Mail::TestMailer.deliveries = MailStoreAgent.new
     end
 
-    def self.mail_registration_confirmation(account)
-      engine = MailRenderer.new File.read('lib/views/mail/register_confirm_mail.haml')
+    def self.send_mail_with_template(account, path)
+      engine = MailRenderer.new File.read path
       #STDERR.puts engine.render(:link => email)
       tok = Authenticatable::ActionToken.create({ :account => account, :action => 'reset password' })
       link = "#{PROTOCOL}://#{SITE}/response-token/#{tok.id}"
@@ -37,17 +37,12 @@ module Accounts
       end
     end
 
+    def self.mail_registration_confirmation(account)
+      self.send_mail_with_template account, 'lib/views/mail/register_confirm_mail.haml'
+    end
+
     def self.mail_change_password_link(account)
-      engine = MailRenderer.new File.read('lib/views/mail/change_password_mail.haml')
-      #STDERR.puts engine.render(:link => email)
-      tok = Authenticatable::ActionToken.create({ :account => account, :action => 'reset password' })
-      link = "#{PROTOCOL}://#{SITE}/response-token/#{tok.id}"
-      mail = Mail.deliver do
-        from  'admin@accounts.test'
-        to account.email
-        subject 'your registration to accounts.test'
-        body engine.render(:link => link)
-      end
+      self.send_mail_with_template account, 'lib/views/mail/change_password_mail.haml'
     end
   end
 end
