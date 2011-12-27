@@ -1,4 +1,4 @@
-Then /^page has "([^"]*)"$/ do |arg1|
+Given /^page has "([^"]*)"$/ do |arg1|
   page.should have_selector(arg1)
 end
 
@@ -95,11 +95,11 @@ Given /^"([^"]*)" has already confirmed her registration$/ do |arg1|
   pending # express the regexp above with the code you wish you had
 end
 
-When /^"([^"]*)" visits stale registration\-confirmation link$/ do |arg1|
+Given /^"([^"]*)" visits stale registration\-confirmation link$/ do |arg1|
   pending # express the regexp above with the code you wish you had
 end
 
-Then /^response is redirected to "([^"]*)"$/ do |arg1|
+Given /^response is redirected to "([^"]*)"$/ do |arg1|
   pending # express the regexp above with the code you wish you had
 end
 
@@ -107,7 +107,7 @@ Given /^"([^"]*)" has already visited reset\-password link$/ do |arg1|
   pending # express the regexp above with the code you wish you had
 end
 
-When /^\w+ visits? "([^"]*)"$/ do |arg1|
+Given /^\w+ visits? "([^"]*)"$/ do |arg1|
   visit arg1
 end
 
@@ -115,11 +115,16 @@ Given /^that "([^"]*)" is authenticated$/ do |arg1|
   pending # express the regexp above with the code you wish you had
 end
 
-When /^I should see raw html: "([^"]*)"$/ do |arg1|
+Given /^I should see raw html: "([^"]*)"$/ do |arg1|
   page.html.should match /#{arg1}/ 
 end
 
 Given /^"([^"]*)" is not registered$/ do |arg1|
   #pending # express the regexp above with the code you wish you had
+end
+
+Then /^"([^"]*)" should receive email containing "([^"]*)"$/ do |arg1, arg2|
+  Mail::TestMailer.deliveries.accounts.should include(arg1)
+  Mail::TestMailer.deliveries.get(arg1).body.should match(arg2)
 end
 

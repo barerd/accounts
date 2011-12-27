@@ -13,7 +13,7 @@ Feature: Visitors can register
     And she fills in "email" with "alice@wunder.land" 
     And she presses "Submit"
     Then I should see "We are sending an e-mail to alice@wunder.land with a one-time link"
-    And "alice@wunder.land" should receive email with register-confirmation link
+    And "alice@wunder.land" should receive email containing "http://accounts.test/response-token/"
 
   Scenario: Registered user requests to register
     When "alice@wunder.land" registers 
