@@ -13,7 +13,13 @@ When /^"([^"]*)" registers$/ do |arg1|
 end
 
 When /^"([^"]*)" has received email with register\-confirmation link$/ do |arg1|
-  STDERR.puts self
+  steps %Q{
+    When she visits "/register"
+    And she fills in "email" with "alice@wunder.land" 
+    And she presses "Submit"
+  }
+  Mail::TestMailer.deliveries.accounts.should include(arg1)
+  @alice_register_confirmation_mail = Mail::TestMailer.deliveries.get(arg1)
   @alice_register_confirmation_mail.should_not be_nil
 end
 
@@ -22,7 +28,11 @@ When /^"([^"]*)" is suspended$/ do |arg1|
 end
 
 When /^"([^"]*)" visits registration\-confirmation link$/ do |arg1|
-  pending # express the regexp above with the code you wish you had
+  @alice_register_confirmation_mail.should_not be_nil
+  @alice_register_confirmation_mail.body.to_s =~ /change your password: (http\S+)/
+  link = $1
+  link.should_not be_nil
+  visit link
 end
 
 When /^"([^"]*)" is authenticated$/ do |arg1|
@@ -134,6 +144,5 @@ Then /^"([^"]*)" should receive email containing "([^"]*)"$/ do |arg1, arg2|
   Mail::TestMailer.deliveries.accounts.should include(arg1)
   @alice_register_confirmation_mail = Mail::TestMailer.deliveries.get(arg1)
   @alice_register_confirmation_mail.body.should match(arg2)
-  STDERR.puts self
 end
 
