@@ -29,21 +29,10 @@ Feature: Visitors can register
   Scenario: Confirm registration
     Given "alice@wunder.land" has received email with register-confirmation link
     When "alice@wunder.land" visits registration-confirmation link
-    Then "alice@wunder.land" is authenticated
-    And "alice@wunder.land" e-mail is confirmed
+    Then alice should see "Change Password"
     And administrator receives email with registration notification
-    And "alice@wunder.land" can change password to "lookingglass"
-    And register-confirmation link will return page-not-found
 
   Scenario: Confirm registration with stale link
     Given "alice@wunder.land" has already confirmed her registration
     When "alice@wunder.land" visits stale registration-confirmation link
-    Then response is redirected to "/"
-
-  Scenario: Registered user can log on
-    Given "alice@wunder.land" has already confirmed her registration
-    When she visits "/logon"
-    And she fills in "input[@name='email']" with "alice@wunder.land" 
-    And she fills in "input[@name='password']" with "grasshopper" 
-    Then she should see "Welcome alice@wunder.land"
-
+    Then response should be "page not found"

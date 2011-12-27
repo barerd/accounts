@@ -1,6 +1,3 @@
-require 'mail'
-require 'haml'
-require 'mail-store-agent'
 require 'model'
 
 module Accounts
@@ -43,6 +40,16 @@ module Accounts
 
     def self.mail_change_password_link(account)
       self.send_mail_with_template account, 'lib/views/mail/change_password_mail.haml'
+    end
+
+    def respond_to_token(id)
+      token = Authenticatable::ActionToken.get(id)
+      case token.action
+      when 'reset password' then
+        redirect '/change-password'
+      else
+        nil
+      end
     end
   end
 end

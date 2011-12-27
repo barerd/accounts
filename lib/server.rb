@@ -53,3 +53,15 @@ post '/forgot-password' do
   @email = params[:email]
   haml :forgot_password_confirm
 end
+
+get '/response-token/:token' do
+  respond_to_token params[:token]
+end
+
+get '/change-password' do
+  haml :change_password
+end
+
+post '/change-password' do
+  # TODO
+end
