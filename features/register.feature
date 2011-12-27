@@ -30,7 +30,7 @@ Feature: Visitors can register
     Given "alice@wunder.land" has received email with register-confirmation link
     When "alice@wunder.land" visits registration-confirmation link
     Then alice should see "Change Password"
-    And administrator receives email with registration notification
+    And "admin@accounts.test" should receive email containing "alice@wunder.land has registered and confirmed"
 
   Scenario: Confirm registration with stale link
     Given "alice@wunder.land" has already confirmed her registration

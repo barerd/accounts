@@ -5,6 +5,7 @@ module Accounts
 
     SITE ||= 'accounts.test' # may define outside before including
     PROTOCOL ||= 'http'
+    ADMIN_EMAIL ||= 'admin@' + SITE
 
     class MailRenderer < Haml::Engine
 
@@ -26,8 +27,8 @@ module Accounts
       #STDERR.puts engine.render(:link => email)
       tok = Authenticatable::ActionToken.create({ :account => account, :action => 'reset password' })
       link = "#{PROTOCOL}://#{SITE}/response-token/#{tok.id}"
-      mail = Mail.deliver do
-        from  'admin@accounts.test'
+      Mail.deliver do
+        from ADMIN_EMAIL
         to account.email
         subject 'your registration to accounts.test'
         body engine.render(:link => link)
@@ -42,8 +43,24 @@ module Accounts
       self.send_mail_with_template account, 'lib/views/mail/change_password_mail.haml'
     end
 
+    def email_confirmed(token)
+      token.account.status << :email_confirmed
+      token.save
+      Mail.deliver do
+        from ADMIN_EMAIL
+        to ADMIN_EMAIL
+        subject 'new account has confirmed e-mail'
+        body "#{token.account.email} has registered and confirmed"
+      end
+    end
+
     def respond_to_token(id)
       token = Authenticatable::ActionToken.get(id)
+
+      if !token.account.status.include? :email_confirmed then
+        email_confirmed token
+      end
+
       case token.action
       when 'reset password' then
         redirect '/change-password'
