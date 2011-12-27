@@ -8,6 +8,8 @@ gem 'dm-timestamps'
 gem 'dm-postgres-adapter'
 #gem 'dm-is-remixable'
 gem 'haml'
+gem 'mail'
+gem 'mail-store-agent'
 
 group :test do
   gem 'capybara'
