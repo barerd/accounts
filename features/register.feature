@@ -23,6 +23,7 @@ Feature: Visitors can register
     And she fills in "email" with "alice@wunder.land" 
     And she presses "Submit"
     Then page has content "alice@wunder.land is already registered"
+    And "alice@wunder.land" should receive email containing "http://accounts.test/response-token/"
 
   @registers @confirms-registration
   Scenario: Confirm registration

@@ -28,17 +28,21 @@ end
 
 post '/register' do
   @email = params[:email]
+  account = Authenticatable::Account.first ({ :email => @email })
 
-  if ( Authenticatable::Account.count( :email => @email ) != 0) then
-    return %Q{#{@email} is already registered.  Please <a href="/logon">log on</a>.}
-  end
-  account = Authenticatable::Account.create ({ :email => @email })
+  if account then
+    Accounts::Helpers.mail_change_password_link account
+    return %Q{#{@email} is already registered.  
+      We are sending #{@email} another e-mail with a link that will allow you to change your password.}
+  else
+    account = Authenticatable::Account.create ({ :email => @email })
 
-  if !account.saved? then
-    return "Sorry. We cannot register you at this time.  Try again later."
+    if !account.saved? then
+      return "Sorry. We cannot register you at this time.  Please try again later."
+    end
+    Accounts::Helpers.mail_registration_confirmation account
+    haml :register_confirm
   end
-  Accounts::Helpers.mail_registration_confirmation account
-  haml :register_confirm
 end
 
 get '/forgot-password' do
