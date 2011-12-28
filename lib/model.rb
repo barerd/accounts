@@ -68,7 +68,7 @@ module Authenticatable
     timestamps :updated_at
 
     def set_password(arg)
-      self.update({ :password =>  hashish(arg)})
+      self.update :password => hashish(arg)
     end
 
     def confirm_password(arg)
@@ -106,7 +106,7 @@ module Authenticatable
       if self.class.count(:action => self.action, :account => self.account)  then
         self.class.destroy
       end
-      result = base_save.bind(self).call *args
+      result = base_save.bind(self).call(*args)
       #STDERR.puts "#{self.inspect}.save returned #{result}"
     end
 
@@ -114,7 +114,7 @@ module Authenticatable
 
     define_method(:destroy) do |*args|
       # If there is a previous instance, delete it
-      result = base_destroy.bind(self).call *args
+      result = base_destroy.bind(self).call(*args)
       #STDERR.puts "#{self.inspect}.destroy returned #{result}"
     end
   end
