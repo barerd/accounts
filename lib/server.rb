@@ -3,10 +3,13 @@ require 'bundler/setup'
 Bundler.require(:default, :test)
 require 'model'
 
+# TODO - This uses a cookied.
+# You might want to replace this with something like Rack::Session::Pool
+enable :sessions
+
 configure :test do
   DataMapper.auto_migrate!  # empty database
   STDERR.puts "called DataMapper.auto_migrate!"
-  #exit
 end
 
 helpers do
@@ -22,12 +25,32 @@ not_found do
   %Q{Page not found.  Go to <a href="home">home page</a>.}
 end
 
+error 403 do
+  "Access denied"
+end
+
 get '/' do
   "Welcome"
 end
 
 get '/logon' do
   haml :logon
+end
+
+post '/logon' do
+  email = params[:email]
+  password = params[:password]
+
+  if authenticate! email, password then
+    redirect '/welcome'
+  else
+    return 403
+  end
+end
+
+get '/welcome' do
+  account = Authenticatable::Account.get(session[:account_id]) or return 403
+  "Welcome #{account.email}"
 end
 
 get '/register' do
@@ -43,11 +66,9 @@ post '/register' do
     return %Q{#{@email} is already registered.  
       We are sending #{@email} another e-mail with a link that will allow you to change your password.}
   else
+    # TODO refactor this into a helper to shorten
     account = Authenticatable::Account.create ({ :email => @email })
-
-    if !account.saved? then
-      return "Sorry. We cannot register you at this time.  Please try again later."
-    end
+    account.saved? or return "Sorry. We cannot register you at this time.  Please try again later."
     Accounts::Helpers.mail_registration_confirmation account
     haml :register_confirm
   end
@@ -71,5 +92,8 @@ get '/change-password' do
 end
 
 post '/change-password' do
+  return 403 unless session[:account_id]
+  account = Authenticatable::Account.get session[:account_id]
+  Accounts::Helpers.mail_change_password_confirmation account
   "You have changed your password.  We are sending you a confirmation e-mail."
 end

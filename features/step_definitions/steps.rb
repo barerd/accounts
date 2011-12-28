@@ -52,19 +52,19 @@ When /^"([^"]*)" is (not )?registered$/ do |arg1, bool|
   Authenticatable::Account.all( :email => arg1 ).should have(bool ? 0 : 1).items
 end
 
-Then /^"([^"]*)" (?:\w+ )?received? an email containing "([^"]*)"$/ do |arg1, arg2|
+When /^"([^"]*)" (?:\w+ )?received? an email containing "([^"]*)"$/ do |arg1, arg2|
   Mail::TestMailer.deliveries.accounts.should include(arg1)
   @last_register_confirmation_mail = Mail::TestMailer.deliveries.get(arg1)
   @last_register_confirmation_mail.body.should match(arg2)
 end
 
-Then /^"([^"]*)" (?:\w+ )?received? but not open(?:ed)? an email containing "([^"]*)"$/ do |arg1, arg2|
+When /^"([^"]*)" (?:\w+ )?received? but not open(?:ed)? an email containing "([^"]*)"$/ do |arg1, arg2|
   Mail::TestMailer.deliveries.accounts.should include(arg1)
   @last_register_confirmation_mail = Mail::TestMailer.deliveries.peek(arg1)
   @last_register_confirmation_mail.body.should match(arg2)
 end
 
-Then /^"([^"]*)" should not receive an email containing "([^"]*)"$/ do |arg1, arg2|
+When /^"([^"]*)" should not receive an email containing "([^"]*)"$/ do |arg1, arg2|
   msg = Mail::TestMailer.deliveries.peek(arg1)
   msg.body.should_not match(arg2) if !msg.nil?
 end

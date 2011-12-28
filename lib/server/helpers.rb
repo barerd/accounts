@@ -35,30 +35,37 @@ module Accounts
       Mail::TestMailer.deliveries = MailStoreAgent.new
     end
 
-    def self.send_mail_with_template(account, path)
+    def self.send_mail_with_template(account, path, *params)
       engine = MailRenderer.new File.read path
       #STDERR.puts engine.render(:link => email)
-      tok = Authenticatable::ActionToken.create({ :account => account, :action => 'reset password' })
-      link = "#{PROTOCOL}://#{SITE}/response-token/#{tok.id}"
       Mail.deliver do
         from ADMIN_EMAIL
         to account.email
         subject 'your registration to accounts.test'
-        body engine.render(:link => link)
+        body engine.render *params
       end
     end
 
     def self.mail_registration_confirmation(account)
-      self.send_mail_with_template account, 'lib/views/mail/register_confirm_mail.haml'
+      tok = Authenticatable::ActionToken.create({ :account => account, :action => 'reset password' })
+      link = "#{PROTOCOL}://#{SITE}/response-token/#{tok.id}"
+      self.send_mail_with_template account, 'lib/views/mail/register_confirm_mail.haml', :link => link
     end
 
     def self.mail_change_password_link(account)
-      self.send_mail_with_template account, 'lib/views/mail/change_password_mail.haml'
+      tok = Authenticatable::ActionToken.create({ :account => account, :action => 'reset password' })
+      link = "#{PROTOCOL}://#{SITE}/response-token/#{tok.id}"
+      self.send_mail_with_template account, 'lib/views/mail/change_password_mail.haml', :link => link
     end
 
-    def email_confirmed(account)
+    def self.mail_change_password_confirmation(account)
+      self.send_mail_with_template account, 'lib/views/mail/change_password_confirm_mail.haml', \
+        :email => account.email
+    end
+
+    def on_email_confirmed(account)
       account.status << :email_confirmed
-      account.taint! :status  # without this, the new status won't get saved
+      account.taint! :status  # taint!() defined in model.rb
       account.save
       Mail.deliver do
         from ADMIN_EMAIL
@@ -71,17 +78,16 @@ module Accounts
     def respond_to_token(id)
       token = Authenticatable::ActionToken.get(id)
 
-      if !token then
-        raise Accounts::AccountsError.new 404, %Q{Page not found.  Go to <a href="/">home page</a>.}
-      end
+      raise Accounts::AccountsError.new 404, %Q{Page not found.  Go to <a href="/">home page</a>.} \
+        unless token
 
       begin
-        if !token.account.status.include? :email_confirmed then
-          email_confirmed token.account
-        end
+        on_email_confirmed token.account \
+          unless token.account.status.include? :email_confirmed
 
         case token.action
         when 'reset password' then
+          session[:account_id] = token.account.id # this visitor is authenticated
           redirect '/change-password'
         else
           nil
@@ -89,6 +95,11 @@ module Accounts
       ensure
         token.destroy or raise "Failed to destroy token #{token.id}"
       end
+    end
+
+    def authenticate!(email, password)
+      account = Authenticatable::Account.first(:email => email) or return false
+      session[:account_id] = account.id
     end
   end
 end

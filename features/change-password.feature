@@ -1,6 +1,5 @@
 @change-password
-
-  Feature: Users can change their passwords
+Feature: Users can change their passwords
 
   @registers-confirms
   Scenario: Alice requests to register
@@ -18,9 +17,18 @@
     And she fills in "password2" with "caterpillar" 
     And she presses "Submit"
     Then she should see "You have changed your password."
-    And "alice@wunder.land" should receive an email containing "Your password has been changed."
-    And "alice@wunder.land" can log on with password "caterpillar"
-    And "alice@wunder.land" can not log on with password "alice"
+    And "alice@wunder.land" should receive but not open an email containing "The password for alice@wunder.land has been changed."
+
+  Scenario: Alice can log on with password "caterpillar"
+    Given "alice@wunder.land" has received but not opened an email containing "The password for alice@wunder.land has been changed."
+    When she visits "/logon"
+    And she fills in "email" with "alice@wunder.land" 
+    And she fills in "password" with "caterpillar"
+    And she presses "Submit"
+    Then she should be on "/welcome"
+    And she should see "Welcome alice@wunder.land"
+
+  Scenario: Alice can not log on with password "alice"
 
   Scenario: Alice changes her password redux
     Given "alice@wunder.land" can log on with password "caterpillar"
