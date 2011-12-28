@@ -71,5 +71,5 @@ get '/change-password' do
 end
 
 post '/change-password' do
-  # TODO
+  "You have changed your password.  We are sending you a confirmation e-mail."
 end

@@ -14,7 +14,7 @@ end
 
 When /^"([^"]*)" visits link from email$/ do |arg1|
   @last_register_confirmation_mail.should_not be_nil
-  @last_register_confirmation_mail.body.to_s =~ /change your password: (http\S+)/
+  @last_register_confirmation_mail.body.to_s =~ /(http\S+)/
   link = $1
   link.should_not be_nil
   #STDERR.puts "link = #{link}"

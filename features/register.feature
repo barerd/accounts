@@ -13,7 +13,7 @@ Feature: Visitors can register
     When she visits "/register"
     And she fills in "email" with "alice@wunder.land" 
     And she presses "Submit"
-    Then I should see "We are sending an e-mail to alice@wunder.land with a one-time link"
+    Then she should see "We are sending an e-mail to alice@wunder.land with a one-time link"
     And "alice@wunder.land" should receive an email containing "http://accounts.test/response-token/"
 
   @registers-again

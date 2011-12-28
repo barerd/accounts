@@ -2,6 +2,14 @@
 
   Feature: Users can change their passwords
 
+  @registers-confirms
+  Scenario: Alice requests to register
+    Given "alice@wunder.land" is not registered
+    When she visits "/register"
+    And she fills in "email" with "alice@wunder.land" 
+    And she presses "Submit"
+    Then she should see "We are sending an e-mail to alice@wunder.land with a one-time link"
+
   Scenario: Alice changes her password
     Given "alice@wunder.land" should receive an email containing "http://accounts.test/response-token/"
     When "alice@wunder.land" visits link from email
@@ -9,7 +17,7 @@
     And she fills in "password" with "caterpillar" 
     And she fills in "password2" with "caterpillar" 
     And she presses "Submit"
-    Then she should see "You have changed your password.  A confirmation will be sent"
+    Then she should see "You have changed your password."
     And "alice@wunder.land" should receive an email containing "Your password has been changed."
     And "alice@wunder.land" can log on with password "caterpillar"
     And "alice@wunder.land" can not log on with password "alice"
