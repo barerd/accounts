@@ -2,6 +2,19 @@ require 'model'
 
 module Accounts
   module Helpers
+    class Accounts::AccountsError < Exception
+      attr_accessor :code
+      attr_accessor :message
+
+      def initialize(code, message)
+        @code = code
+        @message = message
+      end
+
+      def return_error_page
+        [ @code, @message ]
+      end
+    end
 
     SITE ||= 'accounts.test' # may define outside before including
     PROTOCOL ||= 'http'
@@ -57,6 +70,10 @@ module Accounts
     def respond_to_token(id)
       token = Authenticatable::ActionToken.get(id)
 
+      if !token then
+        raise Accounts::AccountsError.new 404, %Q{Page not found.  Go to <a href="/">home page</a>.}
+      end
+
       if !token.account.status.include? :email_confirmed then
         email_confirmed token
       end
@@ -67,6 +84,7 @@ module Accounts
       else
         nil
       end
+      token.destroy
     end
   end
 end

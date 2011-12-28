@@ -149,4 +149,9 @@ When /^"([^"]*)" has already confirmed her registration$/ do |arg1|
   click_button("Submit")
   @last_register_confirmation_mail = Mail::TestMailer.deliveries.get(arg1)
   @last_register_confirmation_mail.should_not be_nil
+  @last_register_confirmation_mail.body.to_s =~ /change your password: (http\S+)/
+  link = $1
+  link.should_not be_nil
+STDERR.puts "link = #{link}"
+  visit link
 end

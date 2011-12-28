@@ -14,6 +14,10 @@ helpers do
   include Accounts::Helpers
 end
 
+error Accounts::AccountsError do
+  env['sinatra.error'].return_error_page
+end
+
 not_found do
   %Q{Page not found.  Go to <a href="home">home page</a>.}
 end

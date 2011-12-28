@@ -9,11 +9,11 @@ gem 'dm-postgres-adapter'
 #gem 'dm-is-remixable'
 gem 'haml'
 gem 'mail'
-gem 'mail-store-agent'
 
 group :test do
   gem 'capybara'
   gem 'cucumber'
   gem 'rspec'
   gem 'sinatra-contrib', :require => 'sinatra/reloader'
+  gem 'mail-store-agent'
 end
