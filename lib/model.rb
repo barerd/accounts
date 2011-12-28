@@ -39,7 +39,7 @@ module DataMapper
 end
 #=end
 
-# https://gist.github.com/763374
+# modified from https://gist.github.com/763374
 module DataMapper
   module Resource
     def taint! property
