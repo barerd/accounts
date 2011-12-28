@@ -1,9 +1,13 @@
-$: << ::File.dirname(__FILE__) + '../lib'
-ENV['DEVEL'] = '1'
+$: << '../lib'
 
 require 'rubygems'
 require 'rspec'
 require 'model'
+
+begin
+  DataMapper.auto_migrate!  # empty database
+  STDERR.puts "called DataMapper.auto_migrate!"
+end
 
 describe Authenticatable::Account do
 
