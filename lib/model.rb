@@ -39,6 +39,22 @@ module DataMapper
 end
 #=end
 
+# https://gist.github.com/763374
+module DataMapper
+  module Resource
+    def taint! property
+      self.persistence_state = PersistenceState::Dirty.new(self) \
+        unless self.persistence_state.kind_of?(PersistenceState::Dirty)
+      self.persistence_state.original_attributes[properties[property]] = Object.new
+    end
+  end
+end
+
+# Example:
+# my_resource.array_prop << 123
+# my_resource.taint! :array_prop
+# my_resource.save
+
 module Authenticatable
 
   class Account

@@ -32,7 +32,7 @@ Feature: Visitors can register
     Then alice should see "Change Password"
     And "admin@accounts.test" should receive email containing "alice@wunder.land has registered and confirmed"
 
-  Scenario: Confirm registration with stale link
+  Scenario: Confirm registration with stale link doesn't do anything
     Given "alice@wunder.land" has already confirmed her registration
     When "alice@wunder.land" visits registration-confirmation link
     Then Alice should see "Page not found"

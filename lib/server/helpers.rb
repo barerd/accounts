@@ -56,14 +56,15 @@ module Accounts
       self.send_mail_with_template account, 'lib/views/mail/change_password_mail.haml'
     end
 
-    def email_confirmed(token)
-      token.account.status << :email_confirmed
-      token.save
+    def email_confirmed(account)
+      account.status << :email_confirmed
+      account.taint! :status  # without this, the new status won't get saved
+      account.save
       Mail.deliver do
         from ADMIN_EMAIL
         to ADMIN_EMAIL
         subject 'new account has confirmed e-mail'
-        body "#{token.account.email} has registered and confirmed"
+        body "#{account.email} has registered and confirmed"
       end
     end
 
@@ -74,17 +75,20 @@ module Accounts
         raise Accounts::AccountsError.new 404, %Q{Page not found.  Go to <a href="/">home page</a>.}
       end
 
-      if !token.account.status.include? :email_confirmed then
-        email_confirmed token
-      end
+      begin
+        if !token.account.status.include? :email_confirmed then
+          email_confirmed token.account
+        end
 
-      case token.action
-      when 'reset password' then
-        redirect '/change-password'
-      else
-        nil
+        case token.action
+        when 'reset password' then
+          redirect '/change-password'
+        else
+          nil
+        end
+      ensure
+        token.destroy or raise "Failed to destroy token #{token.id}"
       end
-      token.destroy
     end
   end
 end

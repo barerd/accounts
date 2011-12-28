@@ -32,8 +32,10 @@ When /^"([^"]*)" visits registration\-confirmation link$/ do |arg1|
   @last_register_confirmation_mail.body.to_s =~ /change your password: (http\S+)/
   link = $1
   link.should_not be_nil
-STDERR.puts "link = #{link}"
+  #STDERR.puts "link = #{link}"
   visit link
+  account = Authenticatable::Account.first( :email => arg1 )
+  account.status.should include :email_confirmed
 end
 
 When /^"([^"]*)" is authenticated$/ do |arg1|
@@ -143,6 +145,11 @@ Then /^"([^"]*)" should receive email containing "([^"]*)"$/ do |arg1, arg2|
   @last_register_confirmation_mail.body.should match(arg2)
 end
 
+Then /^"([^"]*)" should not receive email containing "([^"]*)"$/ do |arg1, arg2|
+  msg = Mail::TestMailer.deliveries.peek(arg1)
+  msg.body.should_not match(arg2) if !msg.nil?
+end
+
 When /^"([^"]*)" has already confirmed her registration$/ do |arg1|
   visit '/register'
   fill_in("email", :with => arg1)
@@ -152,6 +159,7 @@ When /^"([^"]*)" has already confirmed her registration$/ do |arg1|
   @last_register_confirmation_mail.body.to_s =~ /change your password: (http\S+)/
   link = $1
   link.should_not be_nil
-STDERR.puts "link = #{link}"
+  #STDERR.puts "link = #{link}"
   visit link
+  Authenticatable::ActionToken.count(:account => Authenticatable::Account.first(:email => arg1)).should be == 0
 end
