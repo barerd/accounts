@@ -11,6 +11,11 @@ require 'capybara/cucumber'
 
 Capybara.app = Sinatra::Application::new
 
+Mail.defaults do
+  delivery_method :test # don't use '='!
+  Mail::TestMailer.deliveries = MailStoreAgent.new
+end
+
 class AccountsWorld
   include Capybara::DSL
   include RSpec::Expectations

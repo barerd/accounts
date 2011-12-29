@@ -30,11 +30,6 @@ module Accounts
       end
     end
 
-    Mail.defaults do
-      delivery_method :test # don't use '='!
-      Mail::TestMailer.deliveries = MailStoreAgent.new
-    end
-
     def self.send_registration_confirmation(account)
       tok = Authenticatable::ActionToken.create({ :account => account, :action => 'reset password' })
       engine = MailRenderer.new File.read('lib/views/mail/register_confirm_mail.haml')
