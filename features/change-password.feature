@@ -37,9 +37,8 @@ Feature: Users can change their passwords
     And she should see "Access denied"
 
   Scenario: Alice attempts to visit restricted page without first authenticating
-    Given "alice@wunder.land" is not authenticated
+    Given Alice has logged out
     When she visits "/welcome"
-    Then she should be on "/logon"
     And she should see "Access denied"
 
   Scenario: Alice changes her password redux

@@ -82,3 +82,8 @@ When /^"([^"]*)" has already confirmed her registration$/ do |arg1|
   visit link
   Authenticatable::ActionToken.count(:account => Authenticatable::Account.first(:email => arg1)).should be == 0
 end
+
+When /^(?:\S+ )(?:is|has) logged out$/ do
+  visit '/logout'
+end
+

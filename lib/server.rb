@@ -44,8 +44,14 @@ post '/logon' do
   if authenticate! email, password then
     redirect '/welcome'
   else
+    session[:account_id] = nil
     return 403
   end
+end
+
+get '/logout' do
+  session[:account_id] = nil
+  redirect '/logon'
 end
 
 get '/welcome' do
