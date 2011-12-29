@@ -69,12 +69,34 @@ module Accounts
       end
     end
 
-    def self.send_change_email_confirmation(account)
+    def self.send_change_email_confirmation(account, new_email)
+      tok = Authenticatable::ActionToken.create({ 
+        :account => account,
+        :action => 'change email',
+        :params => {:new_email => new_email}
+      })
+      link = "#{PROTOCOL}://#{SITE}/response-token/#{tok.id}"
+      Mail.deliver do
+        from ADMIN_EMAIL
+        to new_email
+        subject 'You requested to change your e-mail'
+        body %Q{
+You have requested to change your e-mail to #{new_email}."
+You must visit this link to confirm: #{link}
+#{account.email} has also been sent a notification e-mail.
+        }
+      end
+    end
+
+    def self.send_change_email_notification(account, new_email)
       Mail.deliver do
         from ADMIN_EMAIL
         to account.email
-        subject 'Your password has changed'
-        body "You have changed your email to #{account.email}"
+        subject 'You requested to change your e-mail'
+        body %Q{
+You have requested to change your e-mail to #{new_email}."
+Please check your mail sent to #{new_email} and follow the instructions.
+        }
       end
     end
 

@@ -1,0 +1,14 @@
+!!!
+
+%html{html_attrs}
+
+  %body
+
+    %h1 Change E-mail
+
+    %form.change_email{:action => '/change-email', :method => 'post'}
+      .label_input
+        %label{:for=>"email"} New e-mail
+        %input{:name=>"email", :id=>"email", :type=>"text"} 
+      .button
+        %button{:type => "submit"} Submit

@@ -1,6 +1,7 @@
 @change-email
 Feature: Users can change their e-mails
 
+  @email-taken
   Scenario: Alice cannot change her e-mail to one that is already taken
     Given I register "alice@wunder.land" with password "caterpillar"
     And I register "caterpillar@wunder.land" with password "caterpillar"
@@ -10,14 +11,16 @@ Feature: Users can change their e-mails
     And she presses "Submit"
     Then she should see "caterpillar@wunder.land is already taken"
 
+  @request-change-email
   Scenario: Alice requests to change email to an available email
     Given "alice@wunder.land" is registered with password "caterpillar"
     And "alice@wunder.land" is authenticated with password "caterpillar"
     When she visits "/change-email"
-    And she fills in "New Email" with "alice@looking.glass" 
+    And she fills in "email" with "alice@looking.glass" 
     And she presses "Submit"
     Then she should see "Check your e-mail"
-    And "alice@wunder.land" opens an email containing "You have changed your email to alice@looking.glass"
+    And "alice@wunder.land" opens an email containing "You have requested to change your e-mail to alice@looking.glass"
+    And "alice@looking.glass" opens an email containing "You have requested to change your e-mail to alice@looking.glass"
 
   Scenario: Alice can still log on with her previous e-mail
     Given "alice@wunder.land" is registered with password "caterpillar"

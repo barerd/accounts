@@ -82,7 +82,7 @@ When /^"([^"]*)" opens an email containing "([^"]*)"$/ do |arg1, arg2|
   Mail::TestMailer.deliveries.accounts.should include(arg1)
   @new_mail = Mail::TestMailer.deliveries.get(arg1)
   @new_mail.should_not be_nil
-  @new_mail.body.should match(arg2)
+  @new_mail.body.should match /#{arg2}/
 end
 
 When /^"([^"]*)" should receive an email$/ do |arg1|

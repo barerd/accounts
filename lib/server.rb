@@ -117,11 +117,12 @@ post '/change-email' do
   return 403 unless session[:account_id]
   account = Authenticatable::Account.get(session[:account_id]) \
     or return 403
-  email = params[:email]
-  Authenticatable::Account.count(:email => email) == 0 \
-    or return "#{email} is already taken"
-  account.email = email
-  account.save or return "We are unable to change your e-mail right now.  Try again later."
-  Accounts::Helpers.send_change_email_confirmation account
-  "You have changed your email."
+  new_email = params[:email]
+  Authenticatable::Account.count(:email => new_email) == 0 \
+    or return "#{new_email} is already taken"
+  #account.email = new_email
+  #account.save or return "We are unable to change your e-mail right now.  Try again later."
+  Accounts::Helpers.send_change_email_confirmation account, new_email
+  Accounts::Helpers.send_change_email_notification account, new_email
+  "Check your e-mail."
 end

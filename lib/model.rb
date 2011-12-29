@@ -94,6 +94,7 @@ module Authenticatable
 
     property :id, String, :key => true, :default => lambda { |res, tok| @@digest.hexdigest(rand.to_s) }
     property :action, String, :unique => :account 
+    property :params, Object, :allow_nil => true # a hash of key => value
     belongs_to :account
     property :expires, DateTime, :default => Time.new + 24 * 3600 # one day
 
