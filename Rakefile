@@ -1,7 +1,7 @@
 #require "bundler/gem_tasks"
 require 'rubygems'
 require 'bundler'
-Bundler.require(:default, :test)
+Bundler.require
 require 'rspec/core/rake_task'
 require 'cucumber/rake/task'
 

@@ -2,7 +2,15 @@ $: << '../lib'
 
 require 'rubygems'
 require 'rspec'
+
+# suppress excessive warnings from DataMapper libraries
+$VERBOSE=nil
 require 'model'
+$VERBOSE=false
+
+# Make sure we're still seeing warnings about our own code
+FOO=:bar
+FOO=:baz
 
 begin
   DataMapper.auto_migrate!  # empty database
