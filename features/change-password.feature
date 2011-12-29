@@ -3,24 +3,26 @@ Feature: Users can change their passwords
 
   @registers-confirms
   Scenario: Alice requests to register
-    Given "alice@wunder.land" is not registered
+    Given I have unregistered "alice@wunder.land"
     When she visits "/register"
     And she fills in "email" with "alice@wunder.land" 
     And she presses "Submit"
-    Then she should see "We are sending an e-mail to alice@wunder.land with a one-time link"
+    Then she should see "Check your e-mail"
 
   Scenario: Alice changes her password
-    Given "alice@wunder.land" has received an email containing "http://accounts.test/response-token/"
+    Given "alice@wunder.land" opens an email containing "http://accounts.test/response-token/"
     When "alice@wunder.land" visits link from email
     Then alice should see "Change Password"
     And she fills in "password" with "caterpillar" 
     And she fills in "password2" with "caterpillar" 
     And she presses "Submit"
     Then she should see "You have changed your password."
-    And "alice@wunder.land" should receive but not open an email containing "The password for alice@wunder.land has changed."
+    And "alice@wunder.land" should receive an email
+    And "admin@accounts.test" should receive an email
+    And "admin@accounts.test" opens an email containing "alice@wunder.land has registered and confirmed"
 
   Scenario: Alice can log on with password "caterpillar"
-    Given "alice@wunder.land" has received an email containing "The password for alice@wunder.land has changed."
+    Given "alice@wunder.land" opens an email containing "The password for alice@wunder.land has changed."
     When she visits "/logon"
     And she fills in "email" with "alice@wunder.land" 
     And she fills in "password" with "caterpillar"
@@ -53,7 +55,7 @@ Feature: Users can change their passwords
     Then she should see "You have changed your password."
 
   Scenario: Alice tries to log on with her defunct password
-    Given "alice@wunder.land" has received an email containing "The password for alice@wunder.land has changed."
+    Given "alice@wunder.land" opens an email containing "The password for alice@wunder.land has changed."
     When she visits "/logon"
     And she fills in "email" with "alice@wunder.land" 
     And she fills in "password" with "caterpillar"
@@ -61,19 +63,19 @@ Feature: Users can change their passwords
     Then she should see "Access denied"
 
   Scenario: Only authenticated users can change their password
-    Given "dormouse@alice.com" is not registered
+    Given I have unregistered "dormouse@alice.com"
     When he visits "/change-password"
     Then he should see "Access denied"
 
   Scenario: Alice forgets her password
-    Given "alice@wunder.land" visits "/forgot-password"
+    Given Alice visits "/forgot-password"
     When she fills in "email" with "alice@wunder.land" 
     And she presses "Submit"
-    Then she should see "We are sending an e-mail to alice@wunder.land with a one-time link"
-    And "alice@wunder.land" should receive an email containing "http://accounts.test/response-token/"
+    Then she should see "Check your e-mail"
+    And "alice@wunder.land" should receive an email
 
-  Scenario: Alice forgets her password and obtains link to reset it
-    Given "alice@wunder.land" should receive an email containing "http://accounts.test/response-token/"
+  Scenario: Alice can reset her password again
+    Given "alice@wunder.land" opens an email containing "http://accounts.test/response-token/"
     When "alice@wunder.land" visits link from email
     Then alice should see "Change Password"
-    But "she remembers it again and goes to tea with Caterpillar. :)"
+    But she remembers it again and goes to tea with Caterpillar. :)

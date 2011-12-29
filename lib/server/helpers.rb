@@ -35,7 +35,7 @@ module Accounts
       Mail::TestMailer.deliveries = MailStoreAgent.new
     end
 
-    def self.mail_registration_confirmation(account)
+    def self.send_registration_confirmation(account)
       tok = Authenticatable::ActionToken.create({ :account => account, :action => 'reset password' })
       engine = MailRenderer.new File.read('lib/views/mail/register_confirm_mail.haml')
       message = engine.render :link => "#{PROTOCOL}://#{SITE}/response-token/#{tok.id}"
@@ -47,7 +47,7 @@ module Accounts
       end
     end
 
-    def self.mail_change_password_link(account)
+    def self.send_change_password_link(account)
       tok = Authenticatable::ActionToken.create({ :account => account, :action => 'reset password' })
       engine = MailRenderer.new File.read('lib/views/mail/change_password_mail.haml')
       message = engine.render :link => "#{PROTOCOL}://#{SITE}/response-token/#{tok.id}"
@@ -57,9 +57,10 @@ module Accounts
         subject 'You may change your password'
         body message
       end
+      #STDERR.puts "Sent change password link to #{account.email}"
     end
 
-    def self.mail_change_password_confirmation(account)
+    def self.send_change_password_confirmation(account)
       Mail.deliver do
         from ADMIN_EMAIL
         to account.email
@@ -78,6 +79,7 @@ module Accounts
         subject 'new account has confirmed e-mail'
         body "#{account.email} has registered and confirmed"
       end
+      STDERR.puts "Sent email to admin"
     end
 
     def respond_to_token(id)

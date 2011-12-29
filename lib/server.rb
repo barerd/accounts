@@ -64,19 +64,18 @@ get '/register' do
 end
 
 post '/register' do
-  @email = params[:email]
-  account = Authenticatable::Account.first ({ :email => @email })
+  email = params[:email]
+  account = Authenticatable::Account.first ({ :email => email })
 
   if account then
-    Accounts::Helpers.mail_change_password_link account
-    return %Q{#{@email} is already registered.  
-      We are sending #{@email} another e-mail with a link that will allow you to change your password.}
+    Accounts::Helpers.send_change_password_link account
+    return %Q{#{email} is already registered.  Check your e-mail to change your password.}
   else
     # TODO refactor this into a helper to shorten
-    account = Authenticatable::Account.create ({ :email => @email })
+    account = Authenticatable::Account.create ({ :email => email })
     account.saved? or return "Sorry. We cannot register you at this time.  Please try again later."
-    Accounts::Helpers.mail_registration_confirmation account
-    haml :register_confirm
+    Accounts::Helpers.send_registration_confirmation account
+    return "Check your e-mail."
   end
 end
 
@@ -85,8 +84,11 @@ get '/forgot-password' do
 end
 
 post '/forgot-password' do
-  @email = params[:email]
-  haml :forgot_password_confirm
+  email = params[:email]
+  account = Authenticatable::Account.first({ :email => email }) \
+    or return "#{email} does not match any account"
+  Accounts::Helpers.send_change_password_link account
+  "Check your e-mail to change your password."
 end
 
 get '/response-token/:token' do
@@ -100,8 +102,9 @@ end
 
 post '/change-password' do
   return 403 unless session[:account_id]
-  account = Authenticatable::Account.get session[:account_id]
+  account = Authenticatable::Account.get(session[:account_id]) \
+    or return 403
   account.set_password params[:password]
-  Accounts::Helpers.mail_change_password_confirmation account
-  "You have changed your password.  We are sending you a confirmation e-mail."
+  Accounts::Helpers.send_change_password_confirmation account
+  "You have changed your password."
 end

@@ -13,14 +13,25 @@ When /^"([^"]*)" is suspended$/ do |arg1|
 end
 
 When /^"([^"]*)" visits link from email$/ do |arg1|
-  @last_register_confirmation_mail.should_not be_nil
-  @last_register_confirmation_mail.body.to_s =~ /(http\S+)/
+  @new_mail.should_not be_nil
+  @new_mail.body.to_s =~ /(http\S+)/
   link = $1
   link.should_not be_nil
   #STDERR.puts "link = #{link}"
   visit link
   account = Authenticatable::Account.first( :email => arg1 )
-  account.status.should include :email_confirmed
+end
+
+When /^"([^"]*)" is (not )?confirmed$/ do |arg1, bool|
+  account = Authenticatable::Account.first( :email => arg1 )
+  should_be_confirmed = !bool
+
+  if (should_be_confirmed) then
+    account.should_not be_nil
+    account.status.should include :email_confirmed
+  else
+    account.status.should_not include :email_confirmed if account
+  end
 end
 
 When /^"([^"]*)" submits request to reset password$/ do |arg1|
@@ -48,34 +59,41 @@ When /^I should see raw html: "([^"]*)"$/ do |arg1|
   page.html.should match /#{arg1}/ 
 end
 
+When /^I have unregistered "([^"]*)"$/ do |arg1|
+  account = Authenticatable::Account.all( :email => arg1 )
+  account.destroy if account
+  Authenticatable::Account.all( :email => arg1 ).should have(0).items
+end
+
 When /^"([^"]*)" is (not )?registered$/ do |arg1, bool|
   Authenticatable::Account.all( :email => arg1 ).should have(bool ? 0 : 1).items
 end
 
-When /^"([^"]*)" (?:\w+ )?received? an email containing "([^"]*)"$/ do |arg1, arg2|
+When /^"([^"]*)" opens an email containing "([^"]*)"$/ do |arg1, arg2|
   Mail::TestMailer.deliveries.accounts.should include(arg1)
-  @last_register_confirmation_mail = Mail::TestMailer.deliveries.get(arg1)
-  @last_register_confirmation_mail.body.should match(arg2)
+  @new_mail = Mail::TestMailer.deliveries.get(arg1)
+  @new_mail.should_not be_nil
+  @new_mail.body.should match(arg2)
 end
 
-When /^"([^"]*)" (?:\w+ )?received? but not open(?:ed)? an email containing "([^"]*)"$/ do |arg1, arg2|
+When /^"([^"]*)" should receive an email$/ do |arg1|
   Mail::TestMailer.deliveries.accounts.should include(arg1)
-  @last_register_confirmation_mail = Mail::TestMailer.deliveries.peek(arg1)
-  @last_register_confirmation_mail.body.should match(arg2)
+  Mail::TestMailer.deliveries.peek(arg1).should_not be_nil
 end
 
-When /^"([^"]*)" should not receive an email containing "([^"]*)"$/ do |arg1, arg2|
+When /^"([^"]*)" should not receive an email$/ do |arg1|
   msg = Mail::TestMailer.deliveries.peek(arg1)
-  msg.body.should_not match(arg2) if !msg.nil?
+  msg.should be_nil
 end
 
 When /^"([^"]*)" has already confirmed her registration$/ do |arg1|
+  # TODO - streamline this by doing it directly in database
   visit '/register'
   fill_in("email", :with => arg1)
   click_button("Submit")
-  @last_register_confirmation_mail = Mail::TestMailer.deliveries.get(arg1)
-  @last_register_confirmation_mail.should_not be_nil
-  @last_register_confirmation_mail.body.to_s =~ /change your password: (http\S+)/
+  @new_mail = Mail::TestMailer.deliveries.get(arg1)
+  @new_mail.should_not be_nil
+  @new_mail.body.to_s =~ /change your password: (http\S+)/
   link = $1
   link.should_not be_nil
   #STDERR.puts "link = #{link}"
