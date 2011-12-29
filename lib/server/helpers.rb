@@ -64,7 +64,7 @@ module Accounts
         from ADMIN_EMAIL
         to account.email
         subject 'Your password has changed'
-        body 'Your password has changed'
+        body "The password for #{account.email} has changed."
       end
     end
 
