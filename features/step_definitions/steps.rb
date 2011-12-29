@@ -90,3 +90,27 @@ When /^(?:\S+ )(?:is|has) logged out$/ do
   visit '/logout'
 end
 
+Given /^I register "([^"]*)" with password "([^"]*)"$/ do |arg1, arg2|
+  account = Authenticatable::Account.create ({ :email => arg1 })
+  account.set_password arg2
+end
+
+Given /^"([^"]*)" is registered with password "([^"]*)"$/ do |arg1, arg2|
+  account = Authenticatable::Account.first ({ :email => arg1 })
+  account.should_not be_nil
+  account.confirm_password(arg2).should be_true
+end
+
+Given /^"([^"]*)" is authenticated with password "([^"]*)"$/ do |arg1, arg2|
+  visit '/logon'
+  fill_in('email', :with => arg1)
+  fill_in('password', :with => arg2)
+  click_button("Submit")
+  current_path.should be '/welcome'
+  page.body.should match "Welcome #{arg1}"
+end
+
+Then /^"([^"]*)" form\-input should contain "([^"]*)"$/ do |arg1, arg2|
+  find("input[@name=#{arg1}]").value.should be arg2
+end
+
