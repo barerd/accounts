@@ -94,6 +94,7 @@ get '/response-token/:token' do
 end
 
 get '/change-password' do
+  return 403 unless session[:account_id]
   haml :change_password
 end
 
