@@ -86,21 +86,6 @@ When /^"([^"]*)" should not receive an email$/ do |arg1|
   msg.should be_nil
 end
 
-When /^"([^"]*)" has already confirmed her registration$/ do |arg1|
-  # TODO - streamline this by doing it directly in database
-  visit '/register'
-  fill_in("email", :with => arg1)
-  click_button("Submit")
-  @new_mail = Mail::TestMailer.deliveries.get(arg1)
-  @new_mail.should_not be_nil
-  @new_mail.body.to_s =~ /change your password: (http\S+)/
-  link = $1
-  link.should_not be_nil
-  #STDERR.puts "link = #{link}"
-  visit link
-  Authenticatable::ActionToken.count(:account => Authenticatable::Account.first(:email => arg1)).should be == 0
-end
-
 When /^(?:\S+ )(?:is|has) logged out$/ do
   visit '/logout'
 end

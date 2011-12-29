@@ -65,18 +65,13 @@ end
 
 post '/register' do
   email = params[:email]
-  account = Authenticatable::Account.first ({ :email => email })
 
-  if account then
+  if account = Authenticatable::Account.first({ :email => email }) then
     Accounts::Helpers.send_change_password_link account
-    return %Q{#{email} is already registered.  Check your e-mail to change your password.}
-  else
-    # TODO refactor this into a helper to shorten
-    account = Authenticatable::Account.create ({ :email => email })
-    account.saved? or return "Sorry. We cannot register you at this time.  Please try again later."
-    Accounts::Helpers.send_registration_confirmation account
-    return "Check your e-mail."
+    return "#{email} is already registered.  Check your e-mail to change your password."
   end
+  register_new_account email
+  "Check your e-mail."
 end
 
 get '/forgot-password' do

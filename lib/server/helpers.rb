@@ -107,12 +107,14 @@ module Accounts
     def authenticate!(email, password)
       account = Authenticatable::Account.first(:email => email) \
         or return false
+      account.confirm_password(password) or return false
+      session[:account_id] = account.id
+    end
 
-      if account.confirm_password password then
-        session[:account_id] = account.id
-        return true
-      end
-      return false
+    def register_new_account(email)
+      account = Authenticatable::Account.create ({ :email => email })
+      account.saved? or return "sorry. we cannot register you at this time.  please try again later."
+      Accounts::Helpers.send_registration_confirmation account
     end
   end
 end
