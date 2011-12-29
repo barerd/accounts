@@ -95,7 +95,7 @@ You must visit this link to confirm: #{link}
         subject 'You requested to change your e-mail'
         body %Q{
 You have requested to change your e-mail to #{new_email}."
-Please check your mail sent to #{new_email} and follow the instructions.
+Please check your e-mail to #{new_email} and follow the instructions.
         }
       end
     end
@@ -124,6 +124,11 @@ Please check your mail sent to #{new_email} and follow the instructions.
           unless token.account.status.include? :email_confirmed
 
         case token.action
+        when 'change email' then
+          token.account.email = token.params[:new_email]
+          token.account.save or return "We are unable to change your e-mail right now.  Try again later."
+          session[:account_id] = token.account.id # this visitor is authenticated
+          redirect to("/logon?email=#{token.params[:new_email]}")
         when 'reset password' then
           session[:account_id] = token.account.id # this visitor is authenticated
           redirect '/change-password'

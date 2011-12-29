@@ -9,7 +9,7 @@
     %form#login_form(action="logon" method="POST")
       .label_input
         %label{:for=>"email"} E-mail
-        %input{:name=>"email", :id=>"email", :type=>"text"} 
+        %input{:name=>"email", :id=>"email", :type=>"text", :value=>@email}
       .label_input
         %label{:for=>"password"} Password
         %input{:name=>"password", :id=>"password", :type=>"password"} 

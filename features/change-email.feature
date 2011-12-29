@@ -20,7 +20,7 @@ Feature: Users can change their e-mails
     And she presses "Submit"
     Then she should see "Check your e-mail"
     And "alice@wunder.land" opens an email containing "You have requested to change your e-mail to alice@looking.glass"
-    And "alice@looking.glass" opens an email containing "You have requested to change your e-mail to alice@looking.glass"
+    And "alice@looking.glass" receives an email containing "http://accounts.test/response-token/"
 
   Scenario: Alice can still log on with her previous e-mail
     Given "alice@wunder.land" is registered with password "caterpillar"
@@ -32,9 +32,8 @@ Feature: Users can change their e-mails
     And she should see "Welcome alice@wunder.land"
 
   Scenario: Alice follows confirmation link
-    Given "alice@wunder.land" opens an email containing "http://accounts.test/response-token/"
-    When "alice@wunder.land" visits link from email
-    Then she should be on "/logon"
+    Given "alice@looking.glass" opens an email containing "http://accounts.test/response-token/"
+    When she visits link from email
     And "email" form-input should contain "alice@looking.glass" 
     And she fills in "password" with "caterpillar"
     And she presses "Submit"

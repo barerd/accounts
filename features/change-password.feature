@@ -11,7 +11,7 @@ Feature: Users can change their passwords
 
   Scenario: Alice changes her password
     Given "alice@wunder.land" opens an email containing "http://accounts.test/response-token/"
-    When "alice@wunder.land" visits link from email
+    When she visits link from email
     Then alice should see "Change Password"
     And she fills in "password" with "caterpillar" 
     And she fills in "password2" with "caterpillar" 
@@ -76,6 +76,6 @@ Feature: Users can change their passwords
 
   Scenario: Alice can reset her password again
     Given "alice@wunder.land" opens an email containing "http://accounts.test/response-token/"
-    When "alice@wunder.land" visits link from email
+    When she visits link from email
     Then alice should see "Change Password"
     But she remembers it again and goes to tea with Caterpillar. :)

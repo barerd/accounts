@@ -12,15 +12,13 @@ When /^"([^"]*)" is suspended$/ do |arg1|
   pending # express the regexp above with the code you wish you had
 end
 
-When /^"([^"]*)" visits link from email$/ do |arg1|
+When /^\w+ visits link from email$/ do
   @new_mail.should_not be_nil
   @new_mail.body.to_s =~ /(http\S+)/
   link = $1
   link.should_not be_nil
   #STDERR.puts "link = #{link}"
   visit link
-  current_path.should be link
-  account = Authenticatable::Account.first( :email => arg1 )
 end
 
 When /^"([^"]*)" is (not )?confirmed$/ do |arg1, bool|
@@ -56,12 +54,7 @@ end
 
 When /^\w+ visits? "([^"]*)"$/ do |arg1|
   visit arg1
-  current_path.should be == arg1
   #save_and_open_page
-end
-
-When /^\w+ attempts? to visit "([^"]*)"$/ do |arg1|
-  visit arg1
 end
 
 When /^I should see raw html: "([^"]*)"$/ do |arg1|
@@ -121,6 +114,6 @@ Given /^"([^"]*)" is authenticated with password "([^"]*)"$/ do |arg1, arg2|
 end
 
 Then /^"([^"]*)" form\-input should contain "([^"]*)"$/ do |arg1, arg2|
-  find("input[@name=#{arg1}]").value.should be arg2
+  find("input[@name=#{arg1}]").value.should be == arg2
 end
 

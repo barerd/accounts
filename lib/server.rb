@@ -38,6 +38,7 @@ get '/' do
 end
 
 get '/logon' do
+  @email = params[:email] || ''
   haml :logon
 end
 
@@ -46,7 +47,7 @@ post '/logon' do
   password = params[:password]
 
   if authenticate! email, password then
-    redirect '/welcome'
+    redirect to('/welcome')
   else
     session[:account_id] = nil
     return 403
@@ -55,7 +56,7 @@ end
 
 get '/logout' do
   session[:account_id] = nil
-  redirect '/logon'
+  redirect to('/logon')
 end
 
 get '/welcome' do
@@ -120,8 +121,6 @@ post '/change-email' do
   new_email = params[:email]
   Authenticatable::Account.count(:email => new_email) == 0 \
     or return "#{new_email} is already taken"
-  #account.email = new_email
-  #account.save or return "We are unable to change your e-mail right now.  Try again later."
   Accounts::Helpers.send_change_email_confirmation account, new_email
   Accounts::Helpers.send_change_email_notification account, new_email
   "Check your e-mail."
