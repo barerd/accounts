@@ -25,7 +25,7 @@ module Accounts
       @@const_vars = Object.new
       @@const_vars.instance_variable_set(:@site, SITE)
 
-      def render(locals) 
+      def render(locals={}) 
         super(@@const_vars, locals)
       end
     end
@@ -35,32 +35,37 @@ module Accounts
       Mail::TestMailer.deliveries = MailStoreAgent.new
     end
 
-    def self.send_mail_with_template(account, path, *params)
-      engine = MailRenderer.new File.read path
-      #STDERR.puts engine.render(:link => email)
+    def self.mail_registration_confirmation(account)
+      tok = Authenticatable::ActionToken.create({ :account => account, :action => 'reset password' })
+      engine = MailRenderer.new File.read('lib/views/mail/register_confirm_mail.haml')
+      message = engine.render :link => "#{PROTOCOL}://#{SITE}/response-token/#{tok.id}"
       Mail.deliver do
         from ADMIN_EMAIL
         to account.email
-        subject 'your registration to accounts.test'
-        body engine.render *params
+        subject 'Your e-mail is confirmed'
+        body message
       end
-    end
-
-    def self.mail_registration_confirmation(account)
-      tok = Authenticatable::ActionToken.create({ :account => account, :action => 'reset password' })
-      link = "#{PROTOCOL}://#{SITE}/response-token/#{tok.id}"
-      self.send_mail_with_template account, 'lib/views/mail/register_confirm_mail.haml', :link => link
     end
 
     def self.mail_change_password_link(account)
       tok = Authenticatable::ActionToken.create({ :account => account, :action => 'reset password' })
-      link = "#{PROTOCOL}://#{SITE}/response-token/#{tok.id}"
-      self.send_mail_with_template account, 'lib/views/mail/change_password_mail.haml', :link => link
+      engine = MailRenderer.new File.read('lib/views/mail/change_password_mail.haml')
+      message = engine.render :link => "#{PROTOCOL}://#{SITE}/response-token/#{tok.id}"
+      Mail.deliver do
+        from ADMIN_EMAIL
+        to account.email
+        subject 'You may change your password'
+        body message
+      end
     end
 
     def self.mail_change_password_confirmation(account)
-      self.send_mail_with_template account, 'lib/views/mail/change_password_confirm_mail.haml', \
-        :email => account.email
+      Mail.deliver do
+        from ADMIN_EMAIL
+        to account.email
+        subject 'Your password has changed'
+        body 'Your password has changed'
+      end
     end
 
     def on_email_confirmed(account)
