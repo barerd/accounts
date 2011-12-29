@@ -41,22 +41,29 @@ Feature: Users can change their passwords
     When she visits "/welcome"
     And she should see "Access denied"
 
-  Scenario: Alice changes her password redux
-    Given "alice@wunder.land" can log on with password "caterpillar"
-    When "alice@wunder.land" visits "/change-password"
-    Then alice should see "Change Password"
-    And she fills in "password" with "whiterabbit" 
+  Scenario: Alice changes her password again
+    Given Alice visits "/logon"
+    And she fills in "email" with "alice@wunder.land" 
+    And she fills in "password" with "caterpillar"
+    And she presses "Submit"
+    And she visits "/change-password"
+    Then she fills in "password" with "whiterabbit" 
     And she fills in "password2" with "whiterabbit" 
     And she presses "Submit"
-    Then she should see "You have changed your password.  A confirmation will be sent"
-    And "alice@wunder.land" should receive an email containing "The password for alice@wunder.land has changed."
-    And "alice@wunder.land" can log on with password "whiterabbit"
-    And "alice@wunder.land" can not log on with password "caterpillar"
+    Then she should see "You have changed your password."
+
+  Scenario: Alice tries to log on with her defunct password
+    Given "alice@wunder.land" has received an email containing "The password for alice@wunder.land has changed."
+    When she visits "/logon"
+    And she fills in "email" with "alice@wunder.land" 
+    And she fills in "password" with "caterpillar"
+    And she presses "Submit"
+    Then she should see "Access denied"
 
   Scenario: Only authenticated users can change their password
-    Given "dormouse@wunder.land" is not registered
-    When "dormouse@wunder.land" visits "/change-password"
-    Then he should see "Permission denied"
+    Given "dormouse@alice.com" is not registered
+    When he visits "/change-password"
+    Then he should see "Access denied"
 
   Scenario: Alice forgets her password
     Given "alice@wunder.land" visits "/forgot-password"
