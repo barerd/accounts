@@ -78,4 +78,4 @@ Feature: Users can change their passwords
     Given "alice@wunder.land" opens an email containing "http://accounts.test/response-token/"
     When she visits link from email
     Then alice should see "Change Password"
-    But she remembers it again and goes to tea with Caterpillar. :)
+    #But she remembers it again and goes to tea with Caterpillar. :)

@@ -20,7 +20,7 @@ Feature: Users can change their e-mails
     And she presses "Submit"
     Then she should see "Check your e-mail"
     And "alice@wunder.land" opens an email containing "You have requested to change your e-mail to alice@looking.glass"
-    And "alice@looking.glass" receives an email containing "http://accounts.test/response-token/"
+    And "alice@looking.glass" should receive an email
 
   Scenario: Alice can still log on with her previous e-mail
     Given "alice@wunder.land" is registered with password "caterpillar"

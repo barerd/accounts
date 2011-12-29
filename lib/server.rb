@@ -70,13 +70,17 @@ end
 
 post '/register' do
   email = params[:email]
-
-  if account = Authenticatable::Account.first({ :email => email }) then
+  account = Authenticatable::Account.first({ :email => email })
+  case
+  when !account
+    register_new_account email
+    return "Check your e-mail."
+  when account.status.include?(:email_confirmed)
+    return %Q{#{email} is already registered.  You may <a href="/logon?email=#{email}"log on</a>.}
+  else
     Accounts::Helpers.send_change_password_link account
     return "#{email} is already registered.  Check your e-mail to change your password."
   end
-  register_new_account email
-  "Check your e-mail."
 end
 
 get '/forgot-password' do

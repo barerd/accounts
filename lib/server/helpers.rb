@@ -110,7 +110,6 @@ Please check your e-mail to #{new_email} and follow the instructions.
         subject 'new account has confirmed e-mail'
         body "#{account.email} has registered and confirmed"
       end
-      STDERR.puts "Sent email to admin"
     end
 
     def respond_to_token(id)
