@@ -17,6 +17,10 @@ helpers do
   include Accounts::Helpers
 end
 
+module Accounts
+  class AccountsError; end
+end
+
 error Accounts::AccountsError do
   env['sinatra.error'].return_error_page
 end
@@ -102,4 +106,22 @@ post '/change-password' do
   account.set_password params[:password]
   Accounts::Helpers.send_change_password_confirmation account
   "You have changed your password."
+end
+
+get '/change-email' do
+  return 403 unless session[:account_id]
+  haml :change_email
+end
+
+post '/change-email' do
+  return 403 unless session[:account_id]
+  account = Authenticatable::Account.get(session[:account_id]) \
+    or return 403
+  email = params[:email]
+  Authenticatable::Account.count(:email => email) == 0 \
+    or return "#{email} is already taken"
+  account.email = email
+  account.save or return "We are unable to change your e-mail right now.  Try again later."
+  Accounts::Helpers.send_change_email_confirmation account
+  "You have changed your email."
 end

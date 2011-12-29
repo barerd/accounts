@@ -4,8 +4,9 @@ Feature: Users can change their e-mails
   Scenario: Alice cannot change her e-mail to one that is already taken
     Given I register "alice@wunder.land" with password "caterpillar"
     And I register "caterpillar@wunder.land" with password "caterpillar"
+    And "alice@wunder.land" is authenticated with password "caterpillar"
     When Alice visits "/change-email"
-    And she fills in "New Email" with "caterpillar@wunder.land" 
+    And she fills in "email" with "caterpillar@wunder.land" 
     And she presses "Submit"
     Then she should see "caterpillar@wunder.land is already taken"
 

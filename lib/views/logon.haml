@@ -14,10 +14,10 @@
         %label{:for=>"password"} Password
         %input{:name=>"password", :id=>"password", :type=>"password"} 
       .button
-        %button{:type => "submit", :value => "Submit"}
+        %button{:type => "submit"} Submit
 
     .reset_password
-      %link{:href=>"/reset-password"} Reset your password.
+      %a{:href=>"/reset-password"} Reset your password.
 
     .register
-      %link{:href=>"/register"} Register!
+      %a{:href=>"/register"} Register!

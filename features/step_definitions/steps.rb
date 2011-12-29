@@ -19,6 +19,7 @@ When /^"([^"]*)" visits link from email$/ do |arg1|
   link.should_not be_nil
   #STDERR.puts "link = #{link}"
   visit link
+  current_path.should be link
   account = Authenticatable::Account.first( :email => arg1 )
 end
 
@@ -36,6 +37,7 @@ end
 
 When /^"([^"]*)" submits request to reset password$/ do |arg1|
   visit '/forgot-password'
+  current_path.should be '/forgot-password'
   with_scope('form.forgot_password') do
     fill_in('email', :with => arg1)
     click_button("Submit")
@@ -45,6 +47,7 @@ end
 # Javascipt injection example
 When /^{([^}]*)} submits request to reset password$/ do |arg1|
   visit '/forgot-password'
+  current_path.should be '/forgot-password'
   with_scope('form.forgot_password') do
     fill_in('email', :with => arg1)
     click_button("Submit")
@@ -52,6 +55,12 @@ When /^{([^}]*)} submits request to reset password$/ do |arg1|
 end
 
 When /^\w+ visits? "([^"]*)"$/ do |arg1|
+  visit arg1
+  current_path.should be == arg1
+  #save_and_open_page
+end
+
+When /^\w+ attempts? to visit "([^"]*)"$/ do |arg1|
   visit arg1
 end
 
@@ -103,10 +112,11 @@ end
 
 Given /^"([^"]*)" is authenticated with password "([^"]*)"$/ do |arg1, arg2|
   visit '/logon'
+  current_path.should be == '/logon'
   fill_in('email', :with => arg1)
   fill_in('password', :with => arg2)
   click_button("Submit")
-  current_path.should be '/welcome'
+  current_path.should be == '/welcome'
   page.body.should match "Welcome #{arg1}"
 end
 

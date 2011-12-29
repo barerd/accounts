@@ -69,6 +69,15 @@ module Accounts
       end
     end
 
+    def self.send_change_email_confirmation(account)
+      Mail.deliver do
+        from ADMIN_EMAIL
+        to account.email
+        subject 'Your password has changed'
+        body "You have changed your email to #{account.email}"
+      end
+    end
+
     def on_email_confirmed(account)
       account.status << :email_confirmed
       account.taint! :status  # taint!() defined in model.rb
@@ -113,7 +122,7 @@ module Accounts
 
     def register_new_account(email)
       account = Authenticatable::Account.create ({ :email => email })
-      account.saved? or return "sorry. we cannot register you at this time.  please try again later."
+      account.saved? or return "We are unable to register you at this time.  Please try again later."
       Accounts::Helpers.send_registration_confirmation account
     end
   end
