@@ -31,8 +31,9 @@ others just want an e-mail -
 but the features and use-cases are nearly identical.
 
 ## Description
-*accounts* is a demo website that offers nothing more than the basic user-account management
-and authentication features that many sites need.
+*accounts* is a demo website that offers nothing more than the 
+basic user-account management and authentication features that many sites need.
+Its pages are bare-bones, terse and with no styling whatsoever.
 It is intended by its author 
 to be copied and used as a template in other sites that require these same features.
 
@@ -49,9 +50,12 @@ This and other use cases are described in the Cucumber *features* documents and 
 *accounts* makes a few assumptions:
 
 1. Each subscriber to a site can be uniquely identified by whatever e-mail address he submits.
-1. Any site that manages user identity and authentication will be hosted as an HTTPS (Secure HTTP) service, 
-meaning that the service must present a signed digital certificate to the browser
-and all traffic to and from the service, including the user's authentication credentials, are encrypted.
+1. Password privacy depends on the transport layer (SSL).
+1. Personal contact info and other attributes of a subscriber 
+are kept in a separate resource than Account that can be joined with Account.
+1. Users may change their e-mail address, thus changing their primary identity.  
+This is justified because people do change their e-mail address from time to time 
+and should not have to re-register with a new identity.
 
 ## Status
 Work-in-progress.
