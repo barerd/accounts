@@ -29,6 +29,18 @@ Feature: Users can change their passwords
     And she should see "Welcome alice@wunder.land"
 
   Scenario: Alice can not log on with password "alice"
+    When she visits "/logon"
+    And she fills in "email" with "alice@wunder.land" 
+    And she fills in "password" with "alice"
+    And she presses "Submit"
+    Then she should be on "/logon"
+    And she should see "Access denied"
+
+  Scenario: Alice attempts to visit restricted page without first authenticating
+    Given "alice@wunder.land" is not authenticated
+    When she visits "/welcome"
+    Then she should be on "/logon"
+    And she should see "Access denied"
 
   Scenario: Alice changes her password redux
     Given "alice@wunder.land" can log on with password "caterpillar"

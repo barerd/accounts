@@ -103,8 +103,14 @@ module Accounts
     end
 
     def authenticate!(email, password)
-      account = Authenticatable::Account.first(:email => email) or return false
-      session[:account_id] = account.id
+      account = Authenticatable::Account.first(:email => email) \
+        or return false
+
+      if account.confirm_password password then
+        session[:account_id] = account.id
+        return true
+      end
+      return false
     end
   end
 end

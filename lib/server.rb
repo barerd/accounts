@@ -94,6 +94,7 @@ end
 post '/change-password' do
   return 403 unless session[:account_id]
   account = Authenticatable::Account.get session[:account_id]
+  account.set_password params[:password]
   Accounts::Helpers.mail_change_password_confirmation account
   "You have changed your password.  We are sending you a confirmation e-mail."
 end

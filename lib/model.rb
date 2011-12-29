@@ -68,11 +68,11 @@ module Authenticatable
     timestamps :updated_at
 
     def set_password(arg)
-      self.update :password => hashish(arg)
+      self.update :password => self.class.hashpasswd(arg)
     end
 
     def confirm_password(arg)
-      hashish(arg) == self.password
+      self.class.hashpasswd(arg) == self.password
     end
 
     private
@@ -81,7 +81,7 @@ module Authenticatable
     SALT = 'b593b7bf01cd29d9cc15d11f9d81f586e255fd252fab264129e6046934876c23' # random
 
     # Can't name this "hash".  Name already taken.
-    def hashish(arg)
+    def self.hashpasswd(arg)
       @@digest.hexdigest(SALT + arg)
     end
   end
