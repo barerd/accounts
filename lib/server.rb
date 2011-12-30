@@ -10,6 +10,11 @@ enable :sessions
 configure :test do
   DataMapper.auto_migrate!  # empty database
   STDERR.puts "called DataMapper.auto_migrate!"
+
+  Mail.defaults do
+    delivery_method :test # don't use '='!
+    Mail::TestMailer.deliveries = MailStoreAgent.new
+  end
 end
 
 helpers do
