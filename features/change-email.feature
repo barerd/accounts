@@ -32,7 +32,7 @@ Feature: Users can change their e-mails
     And she should see "Welcome alice@wunder.land"
 
   Scenario: Alice follows confirmation link
-    Given "alice@looking.glass" opens an email containing "http://accounts.test/response-token/"
+    Given "alice@looking.glass" opens an email containing "/response-token/"
     When she visits link from email
     And "email" form-input should contain "alice@looking.glass" 
     And she fills in "password" with "caterpillar"

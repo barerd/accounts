@@ -18,13 +18,13 @@ Feature: Visitors can register
     And "alice@wunder.land" should receive an email
 
   Scenario: Confirm registration with stale link doesn't do anything
-    Given "alice@wunder.land" opens an email containing "http://accounts.test/response-token/"
+    Given "alice@wunder.land" opens an email containing "/response-token/"
     When she visits link from email
     Then Alice should see "Page not found"
     And "alice@wunder.land" is not confirmed
 
   Scenario: Confirm registration with active link is successful
-    Given "alice@wunder.land" opens an email containing "http://accounts.test/response-token/"
+    Given "alice@wunder.land" opens an email containing "/response-token/"
     When she visits link from email
     Then alice should see "Change Password"
     And "admin@accounts.test" should receive an email

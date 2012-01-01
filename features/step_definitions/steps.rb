@@ -14,6 +14,7 @@ end
 
 When /^\w+ visits link from email$/ do
   @new_mail.should_not be_nil
+STDERR.puts @new_mail.body
   @new_mail.body.to_s =~ /(http\S+)/
   link = $1
   link.should_not be_nil

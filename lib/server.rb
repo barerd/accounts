@@ -7,12 +7,18 @@ require 'model'
 # You might want to replace this with something like Rack::Session::Pool
 enable :sessions
 
+configure :development do
+  Mail.defaults do
+    delivery_method Mail::SingleFileDelivery::Agent, :filename => '/tmp/mail-test-fifo'
+  end
+end
+
 configure :test do
   DataMapper.auto_migrate!  # empty database
   STDERR.puts "called DataMapper.auto_migrate!"
 
   Mail.defaults do
-    delivery_method :test # don't use '='!
+    delivery_method(:test)
     Mail::TestMailer.deliveries = MailStoreAgent.new
   end
 end
@@ -83,7 +89,7 @@ post '/register' do
   when account.status.include?(:email_confirmed)
     return %Q{#{email} is already registered.  You may <a href="/logon?email=#{email}"log on</a>.}
   else
-    Accounts::Helpers.send_change_password_link account
+    send_change_password_link account
     return "#{email} is already registered.  Check your e-mail to change your password."
   end
 end
@@ -96,7 +102,7 @@ post '/forgot-password' do
   email = params[:email]
   account = Authenticatable::Account.first({ :email => email }) \
     or return "#{email} does not match any account"
-  Accounts::Helpers.send_change_password_link account
+  send_change_password_link account
   "Check your e-mail to change your password."
 end
 
@@ -114,7 +120,7 @@ post '/change-password' do
   account = Authenticatable::Account.get(session[:account_id]) \
     or return 403
   account.set_password params[:password]
-  Accounts::Helpers.send_change_password_confirmation account
+  send_change_password_confirmation account
   "You have changed your password."
 end
 
@@ -130,7 +136,7 @@ post '/change-email' do
   new_email = params[:email]
   Authenticatable::Account.count(:email => new_email) == 0 \
     or return "#{new_email} is already taken"
-  Accounts::Helpers.send_change_email_confirmation account, new_email
-  Accounts::Helpers.send_change_email_notification account, new_email
+  send_change_email_confirmation account, new_email
+  send_change_email_notification account, new_email
   "Check your e-mail."
 end

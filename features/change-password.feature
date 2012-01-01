@@ -10,7 +10,7 @@ Feature: Users can change their passwords
     Then she should see "Check your e-mail"
 
   Scenario: Alice changes her password
-    Given "alice@wunder.land" opens an email containing "http://accounts.test/response-token/"
+    Given "alice@wunder.land" opens an email containing "/response-token/"
     When she visits link from email
     Then alice should see "Change Password"
     And she fills in "password" with "caterpillar" 
@@ -75,7 +75,7 @@ Feature: Users can change their passwords
     And "alice@wunder.land" should receive an email
 
   Scenario: Alice can reset her password again
-    Given "alice@wunder.land" opens an email containing "http://accounts.test/response-token/"
+    Given "alice@wunder.land" opens an email containing "/response-token/"
     When she visits link from email
     Then alice should see "Change Password"
     #But she remembers it again and goes to tea with Caterpillar. :)

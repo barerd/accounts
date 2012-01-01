@@ -16,24 +16,29 @@ module Accounts
       end
     end
 
-    SITE ||= 'accounts.test' # may define outside before including
-    PROTOCOL ||= 'http'
-    ADMIN_EMAIL ||= 'admin@' + SITE
+    ADMIN_EMAIL ||= 'admin@accounts.test'
+
+    def site
+      scheme = request.env['rack.url_scheme']
+      host = request.env['HTTP_HOST'] # includes port number
+      "#{scheme}://#{host}"
+    end
 
     class MailRenderer < Haml::Engine
 
-      @@const_vars = Object.new
-      @@const_vars.instance_variable_set(:@site, SITE)
+      @@context = Object.new
 
       def render(locals={}) 
-        super(@@const_vars, locals)
+        super(@@context, locals)
       end
     end
 
-    def self.send_registration_confirmation(account)
+    def send_registration_confirmation(account)
       tok = Authenticatable::ActionToken.create({ :account => account, :action => 'reset password' })
       engine = MailRenderer.new File.read('lib/views/mail/register_confirm_mail.haml')
-      message = engine.render :link => "#{PROTOCOL}://#{SITE}/response-token/#{tok.id}"
+      message = engine.render(
+        :link => "#{site}/response-token/#{tok.id}",
+      )
       Mail.deliver do
         from ADMIN_EMAIL
         to account.email
@@ -42,10 +47,12 @@ module Accounts
       end
     end
 
-    def self.send_change_password_link(account)
+    def send_change_password_link(account)
       tok = Authenticatable::ActionToken.create({ :account => account, :action => 'reset password' })
       engine = MailRenderer.new File.read('lib/views/mail/change_password_mail.haml')
-      message = engine.render :link => "#{PROTOCOL}://#{SITE}/response-token/#{tok.id}"
+      message = engine.render(
+        :link => "#{site}/response-token/#{tok.id}",
+      )
       Mail.deliver do
         from ADMIN_EMAIL
         to account.email
@@ -55,7 +62,7 @@ module Accounts
       #STDERR.puts "Sent change password link to #{account.email}"
     end
 
-    def self.send_change_password_confirmation(account)
+    def send_change_password_confirmation(account)
       Mail.deliver do
         from ADMIN_EMAIL
         to account.email
@@ -64,13 +71,13 @@ module Accounts
       end
     end
 
-    def self.send_change_email_confirmation(account, new_email)
+    def send_change_email_confirmation(account, new_email)
       tok = Authenticatable::ActionToken.create({ 
         :account => account,
         :action => 'change email',
         :params => {:new_email => new_email}
       })
-      link = "#{PROTOCOL}://#{SITE}/response-token/#{tok.id}"
+      link = "#{site}/response-token/#{tok.id}"
       Mail.deliver do
         from ADMIN_EMAIL
         to new_email
@@ -83,7 +90,7 @@ You must visit this link to confirm: #{link}
       end
     end
 
-    def self.send_change_email_notification(account, new_email)
+    def send_change_email_notification(account, new_email)
       Mail.deliver do
         from ADMIN_EMAIL
         to account.email
@@ -144,7 +151,7 @@ Please check your e-mail to #{new_email} and follow the instructions.
     def register_new_account(email)
       account = Authenticatable::Account.create ({ :email => email })
       account.saved? or return "We are unable to register you at this time.  Please try again later."
-      Accounts::Helpers.send_registration_confirmation account
+      send_registration_confirmation account
     end
   end
 end

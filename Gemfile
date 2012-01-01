@@ -16,4 +16,5 @@ group :test do
   gem 'rspec'
   gem 'sinatra-contrib', :require => 'sinatra/reloader'
   gem 'mail-store-agent'
+  gem 'mail-single_file_delivery'
 end
