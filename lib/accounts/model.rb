@@ -1,4 +1,4 @@
-# Copyright Westside Consulting LLC, Ann Arbor, MI, USA, 2010
+# Copyright Westside Consulting LLC, Ann Arbor, MI, USA, 2012
 
 require 'data_mapper'
 require 'dm-types/enum'
@@ -55,7 +55,7 @@ end
 # my_resource.taint! :array_prop
 # my_resource.save
 
-module Authenticatable
+module Accounts
 
   class Account
     include DataMapper::Resource

@@ -1,3 +1,5 @@
+# Copyright Westside Consulting LLC, Ann Arbor, MI, USA, 2012
+
 require 'accounts'
 require 'accounts/model'
 require 'sinatra/base'
@@ -9,7 +11,7 @@ class MyWebApp < Sinatra::Base
   end
 
   get '/welcome' do
-    account = Authenticatable::Account.get(session[:account_id]) or return 403
+    account = Accounts::Account.get(session[:account_id]) or return 403
     "Welcome #{account.email}"
   end
 end

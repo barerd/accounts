@@ -1,3 +1,5 @@
+# Copyright Westside Consulting LLC, Ann Arbor, MI, USA, 2012
+
 require 'rubygems'
 require 'bundler/setup'
 Bundler.require(:default, :test)
@@ -28,14 +30,14 @@ module Accounts
 
     helpers do
       require 'accounts/helpers.rb'
-      include Accounts::Helpers
+      include ::Accounts::Helpers
     end
 
     module Accounts
       class AccountsError; end
     end
 
-    error Accounts::AccountsError do
+    error ::Accounts::AccountsError do
       env['sinatra.error'].return_error_page
     end
 
@@ -79,7 +81,7 @@ module Accounts
 
     post '/register' do
       email = params[:email]
-      account = Authenticatable::Account.first({ :email => email })
+      account = ::Accounts::Account.first({ :email => email })
       case
       when !account
         register_new_account email
@@ -98,7 +100,7 @@ module Accounts
 
     post '/forgot-password' do
       email = params[:email]
-      account = Authenticatable::Account.first({ :email => email }) \
+      account = ::Accounts::Account.first({ :email => email }) \
         or return "#{email} does not match any account"
       send_change_password_link account
       "Check your e-mail to change your password."
@@ -115,7 +117,7 @@ module Accounts
 
     post '/change-password' do
       return 403 unless session[:account_id]
-      account = Authenticatable::Account.get(session[:account_id]) \
+      account = ::Accounts::Account.get(session[:account_id]) \
         or return 403
       account.set_password params[:password]
       send_change_password_confirmation account
@@ -129,10 +131,10 @@ module Accounts
 
     post '/change-email' do
       return 403 unless session[:account_id]
-      account = Authenticatable::Account.get(session[:account_id]) \
+      account = ::Accounts::Account.get(session[:account_id]) \
         or return 403
       new_email = params[:email]
-      Authenticatable::Account.count(:email => new_email) == 0 \
+      ::Accounts::Account.count(:email => new_email) == 0 \
         or return "#{new_email} is already taken"
       send_change_email_confirmation account, new_email
       send_change_email_notification account, new_email

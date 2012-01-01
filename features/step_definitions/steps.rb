@@ -23,7 +23,7 @@ STDERR.puts @new_mail.body
 end
 
 When /^"([^"]*)" is (not )?confirmed$/ do |arg1, bool|
-  account = Authenticatable::Account.first( :email => arg1 )
+  account = Accounts::Account.first( :email => arg1 )
   should_be_confirmed = !bool
 
   if (should_be_confirmed) then
@@ -63,13 +63,13 @@ When /^I should see raw html: "([^"]*)"$/ do |arg1|
 end
 
 When /^I have unregistered "([^"]*)"$/ do |arg1|
-  account = Authenticatable::Account.all( :email => arg1 )
+  account = Accounts::Account.all( :email => arg1 )
   account.destroy if account
-  Authenticatable::Account.all( :email => arg1 ).should have(0).items
+  Accounts::Account.all( :email => arg1 ).should have(0).items
 end
 
 When /^"([^"]*)" is (not )?registered$/ do |arg1, bool|
-  Authenticatable::Account.all( :email => arg1 ).should have(bool ? 0 : 1).items
+  Accounts::Account.all( :email => arg1 ).should have(bool ? 0 : 1).items
 end
 
 When /^"([^"]*)" opens an email containing "([^"]*)"$/ do |arg1, arg2|
@@ -94,12 +94,12 @@ When /^(?:\S+ )(?:is|has) logged out$/ do
 end
 
 Given /^I register "([^"]*)" with password "([^"]*)"$/ do |arg1, arg2|
-  account = Authenticatable::Account.create ({ :email => arg1 })
+  account = Accounts::Account.create ({ :email => arg1 })
   account.set_password arg2
 end
 
 Given /^"([^"]*)" is registered with password "([^"]*)"$/ do |arg1, arg2|
-  account = Authenticatable::Account.first ({ :email => arg1 })
+  account = Accounts::Account.first ({ :email => arg1 })
   account.should_not be_nil
   account.confirm_password(arg2).should be_true
 end
