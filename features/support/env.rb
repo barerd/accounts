@@ -7,9 +7,10 @@ require 'bundler/setup'
 Bundler.require(:test)
 require 'capybara/cucumber'
 require 'accounts'
+require 'test/web_app'
 
-Capybara.app = Sinatra::Application::new
-#Capybara.app = MyWebApp.new
+#Capybara.app = Sinatra::Application::new
+Capybara.app = MyWebApp
 
 class AccountsWorld
   include Capybara::DSL
