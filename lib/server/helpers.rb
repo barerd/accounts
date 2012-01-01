@@ -24,40 +24,28 @@ module Accounts
       "#{scheme}://#{host}"
     end
 
-    class MailRenderer < Haml::Engine
-
-      @@context = Object.new
-
-      def render(locals={}) 
-        super(@@context, locals)
-      end
-    end
-
     def send_registration_confirmation(account)
       tok = Authenticatable::ActionToken.create({ :account => account, :action => 'reset password' })
-      engine = MailRenderer.new File.read('lib/views/mail/register_confirm_mail.haml')
-      message = engine.render(
-        :link => "#{site}/response-token/#{tok.id}",
-      )
+      link = "#{site}/response-token/#{tok.id}"
       Mail.deliver do
         from ADMIN_EMAIL
         to account.email
         subject 'Your e-mail is confirmed'
-        body message
+        body %Q{You have registered for accounts.test.
+
+Follow this link to confirm your e-mail address: #{link}
+        }
       end
     end
 
     def send_change_password_link(account)
       tok = Authenticatable::ActionToken.create({ :account => account, :action => 'reset password' })
-      engine = MailRenderer.new File.read('lib/views/mail/change_password_mail.haml')
-      message = engine.render(
-        :link => "#{site}/response-token/#{tok.id}",
-      )
+      link = "#{site}/response-token/#{tok.id}"
       Mail.deliver do
         from ADMIN_EMAIL
         to account.email
         subject 'You may change your password'
-        body message
+        body "Follow this link to change your password: #{link}"
       end
       #STDERR.puts "Sent change password link to #{account.email}"
     end
