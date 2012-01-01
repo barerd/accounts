@@ -2,14 +2,14 @@
 
 ENV['RACK_ENV'] = 'test'
 
-require File.join(File.dirname(__FILE__), '..', '..', 'lib/server.rb')
-
 require 'rubygems'
 require 'bundler/setup'
 Bundler.require(:test)
 require 'capybara/cucumber'
+require 'accounts'
 
 Capybara.app = Sinatra::Application::new
+#Capybara.app = MyWebApp.new
 
 class AccountsWorld
   include Capybara::DSL

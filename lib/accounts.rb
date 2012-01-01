@@ -1,7 +1,7 @@
 require 'rubygems'
 require 'bundler/setup'
 Bundler.require(:default, :test)
-require 'model'
+require 'accounts/model'
 
 # TODO - This uses a cookied.
 # You might want to replace this with something like Rack::Session::Pool
@@ -24,7 +24,7 @@ configure :test do
 end
 
 helpers do
-  require 'server/helpers.rb'
+  require 'accounts/helpers.rb'
   include Accounts::Helpers
 end
 

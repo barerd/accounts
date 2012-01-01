@@ -5,7 +5,7 @@ require 'rspec'
 
 # suppress excessive warnings from DataMapper libraries
 $VERBOSE=nil
-require 'model'
+require 'accounts/model'
 $VERBOSE=false
 
 # Make sure we're still seeing warnings about our own code

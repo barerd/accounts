@@ -1,5 +1,3 @@
-require 'model'
-
 module Accounts
   module Helpers
     class Accounts::AccountsError < Exception
