@@ -36,12 +36,12 @@ Feature: Users can change their passwords
     And she fills in "password" with "alice"
     And she presses "Submit"
     Then she should be on "/logon"
-    And she should see "Access denied"
+    And she should not see "Welcome alice@wunder.land"
 
   Scenario: Alice attempts to visit restricted page without first authenticating
     Given Alice has logged out
     When she visits "/welcome"
-    And she should see "Access denied"
+    And she should not see "Welcome alice@wunder.land"
 
   Scenario: Alice changes her password again
     Given Alice visits "/logon"
@@ -60,12 +60,12 @@ Feature: Users can change their passwords
     And she fills in "email" with "alice@wunder.land" 
     And she fills in "password" with "caterpillar"
     And she presses "Submit"
-    Then she should see "Access denied"
+    And she should not see "Welcome alice@wunder.land"
 
   Scenario: Only authenticated users can change their password
     Given I have unregistered "dormouse@alice.com"
     When he visits "/change-password"
-    Then he should see "Access denied"
+    And he should not see "Change Password"
 
   Scenario: Alice forgets her password
     Given Alice visits "/forgot-password"

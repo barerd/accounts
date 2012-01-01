@@ -46,4 +46,4 @@ Feature: Users can change their e-mails
     And she fills in "email" with "alice@wunder.land" 
     And she fills in "password" with "caterpillar"
     And she presses "Submit"
-    Then she should see "Access denied"
+    And she should not see "Welcome alice@wunder.land"
