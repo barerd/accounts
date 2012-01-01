@@ -44,7 +44,7 @@ Follow this link to confirm your e-mail address: #{link}
       Mail.deliver do
         from ADMIN_EMAIL
         to account.email
-        subject 'You may change your password'
+        subject 'How to change your password'
         body "Follow this link to change your password: #{link}"
       end
       #STDERR.puts "Sent change password link to #{account.email}"
@@ -70,9 +70,10 @@ Follow this link to confirm your e-mail address: #{link}
         from ADMIN_EMAIL
         to new_email
         subject 'You requested to change your e-mail'
-        body %Q{
-You have requested to change your e-mail to #{new_email}."
+        body %Q{You have requested to change your e-mail to #{new_email}."
+
 You must visit this link to confirm: #{link}
+
 #{account.email} has also been sent a notification e-mail.
         }
       end
@@ -83,9 +84,11 @@ You must visit this link to confirm: #{link}
         from ADMIN_EMAIL
         to account.email
         subject 'You requested to change your e-mail'
-        body %Q{
-You have requested to change your e-mail to #{new_email}."
-Please check your e-mail to #{new_email} and follow the instructions.
+        body %Q{You have requested to change your e-mail to #{new_email}."
+
+An e-mail has been sent to #{new_email}.
+
+Please open that mail and follow the instructions.
         }
       end
     end
