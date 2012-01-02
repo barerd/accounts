@@ -86,7 +86,7 @@ module Accounts
         return %Q{#{email} is already registered.  You may <a href="/logon?email=#{email}"log on</a>.}
       else
         send_change_password_link account
-        return "#{email} is already registered.  Check your e-mail to change your password."
+        return "#{email} has already registered.  Check your e-mail to set your password."
       end
     end
 
