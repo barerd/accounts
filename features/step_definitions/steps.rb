@@ -35,25 +35,6 @@ When /^"([^"]*)" is (not )?confirmed$/ do |arg1, bool|
   end
 end
 
-When /^"([^"]*)" submits request to reset password$/ do |arg1|
-  visit '/forgot-password'
-  current_path.should be '/forgot-password'
-  with_scope('form.forgot_password') do
-    fill_in('email', :with => arg1)
-    click_button("Submit")
-  end
-end
-
-# Javascipt injection example
-When /^{([^}]*)} submits request to reset password$/ do |arg1|
-  visit '/forgot-password'
-  current_path.should be '/forgot-password'
-  with_scope('form.forgot_password') do
-    fill_in('email', :with => arg1)
-    click_button("Submit")
-  end
-end
-
 When /^\w+ visits? "([^"]*)"$/ do |arg1|
   visit arg1
   #save_and_open_page
@@ -94,18 +75,18 @@ When /^(?:\S+ )(?:is|has) logged out$/ do
   visit '/logout'
 end
 
-Given /^I register "([^"]*)" with password "([^"]*)"$/ do |arg1, arg2|
+When /^I register "([^"]*)" with password "([^"]*)"$/ do |arg1, arg2|
   account = Accounts::Account.create ({ :email => arg1 })
   account.set_password arg2
 end
 
-Given /^"([^"]*)" is registered with password "([^"]*)"$/ do |arg1, arg2|
+When /^"([^"]*)" is registered with password "([^"]*)"$/ do |arg1, arg2|
   account = Accounts::Account.first ({ :email => arg1 })
   account.should_not be_nil
   account.confirm_password(arg2).should be_true
 end
 
-Given /^"([^"]*)" is authenticated with password "([^"]*)"$/ do |arg1, arg2|
+When /^"([^"]*)" is authenticated with password "([^"]*)"$/ do |arg1, arg2|
   visit '/logon'
   current_path.should be == '/logon'
   fill_in('email', :with => arg1)
