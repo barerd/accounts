@@ -10,8 +10,12 @@ class MyWebApp < Sinatra::Base
   before do
   end
 
+  get '/' do
+    "Welcome visitor!"
+  end
+
   get '/welcome' do
     account = Accounts::Account.get(session[:account_id]) or return 403
-    "Welcome #{account.email}"
+    "Welcome #{account.email}!"
   end
 end

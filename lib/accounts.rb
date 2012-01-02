@@ -49,10 +49,6 @@ module Accounts
       "Access denied"
     end
 
-    get '/' do
-      "Welcome"
-    end
-
     get '/logon' do
       @email = params[:email] || ''
       haml :logon
