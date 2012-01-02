@@ -7,6 +7,14 @@ require 'sinatra/base'
 class MyWebApp < Sinatra::Base
   use Accounts::Server;
 
+  not_found do
+    %Q{Page not found.  Go to <a href="home">home page</a>.}
+  end
+
+  error 403 do
+    "Access denied"
+  end
+
   before do
   end
 
