@@ -81,3 +81,9 @@ Feature: Users can change their passwords
     When she visits link from email
     Then alice should see "Change Password"
     #But she remembers it again and goes to tea with Caterpillar. :)
+
+  Scenario: Unknown user attempts to reset password
+    Given MadHatter visits "/forgot-password"
+    When he fills in "email" with "madhatter@wunder.land" 
+    And he presses "Submit"
+    Then he should see "madhatter@wunder.land is not registered."
