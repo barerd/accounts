@@ -49,11 +49,6 @@ module Accounts
       "Access denied"
     end
 
-    get '/logon' do
-      @email = params[:email] || ''
-      haml :logon
-    end
-
     post '/logon' do
       email = params[:email]
       password = params[:password]
@@ -64,15 +59,6 @@ module Accounts
         session[:account_id] = nil
         return 403
       end
-    end
-
-    get '/logout' do
-      session[:account_id] = nil
-      redirect to('/logon')
-    end
-
-    get '/register' do
-      haml :register
     end
 
     post '/register' do
@@ -90,25 +76,12 @@ module Accounts
       end
     end
 
-    get '/forgot-password' do
-      haml :forgot_password
-    end
-
     post '/forgot-password' do
       email = params[:email]
       account = ::Accounts::Account.first({ :email => email }) \
         or return "#{email} does not match any account"
       send_change_password_link account
       "Check your e-mail to change your password."
-    end
-
-    get '/response-token/:token' do
-      respond_to_token params[:token]
-    end
-
-    get '/change-password' do
-      return 403 unless session[:account_id]
-      haml :change_password
     end
 
     post '/change-password' do
@@ -118,11 +91,6 @@ module Accounts
       account.set_password params[:password]
       send_change_password_confirmation account
       "You have changed your password."
-    end
-
-    get '/change-email' do
-      return 403 unless session[:account_id]
-      haml :change_email
     end
 
     post '/change-email' do
@@ -135,6 +103,10 @@ module Accounts
       send_change_email_confirmation account, new_email
       send_change_email_notification account, new_email
       "Check your e-mail."
+    end
+
+    get '/response-token/:token' do
+      respond_to_token params[:token]
     end
   end
 end
