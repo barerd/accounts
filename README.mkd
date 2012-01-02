@@ -83,6 +83,11 @@ If your app needs to maintain other info about it's subscribers,
 you can create a separate table and join it with Accounts::Account defined in lib/accounts/model.rb
 in a one-to-one relationship.
 
+## Status
+Can't get sinatra-reloader to work since I converted it into a modular app.
+
+Need to convert this into a proper Gem.
+
 ## Disclaimer
 
 This package and all its contents are provided provided AS-IS, for demonstration purposes.
