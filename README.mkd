@@ -1,7 +1,7 @@
 # Accounts
 
 ## Summary
-*accounts* is a demo website that offers nothing more than the basic user-account management
+*accounts* is a demo website that offers than the basic user-account management
 and authentication features that many sites need.
 
 ## Background
@@ -31,7 +31,7 @@ others just want an e-mail -
 but the features and use-cases are nearly identical.
 
 ## Description
-*accounts* is a demo website that offers nothing more than the 
+*accounts* is a demo website that offers than the 
 basic user-account management and authentication features that many sites need.
 Its pages are bare-bones, terse and with no styling whatsoever.
 It is intended by its author 
@@ -39,7 +39,7 @@ to be copied and used as a template in other sites that require these same featu
 
 *accounts* supports a very lean and minimal user-registration protocol.
 
-1. A user who wants to register need submit nothing more than a valid e-mail.
+1. A user who wants to register need only submit a valid e-mail address.
 1. The service will attempt to e-mail a unique URI to the address they have given.
 1. When the new registree candidate visits that URI (presumably by clicking),
 that e-mail (and their identity) may be considered as valid.
@@ -59,6 +59,7 @@ and should not have to re-register with a new identity.
 
 ## Usage
 Accounts::Server defines the following paths for your web-app:
+
 * POST '/logon'
 * POST '/register'
 * POST '/forgot-password'
@@ -75,6 +76,12 @@ the pages and e-mails for your app.
 
 Accounts is agnostic about what templating engine and mail engine your app uses,
 although the default configuration uses http://github.com/mikel/mail.
+
+Accounts defines several tables for keeping track of user accounts.
+These do not include any personal or contact info other than a person's e-mail address.
+If your app needs to maintain other info about it's subscribers,
+you can create a separate table and join it with Accounts::Account defined in lib/accounts/model.rb
+in a one-to-one relationship.
 
 ## Disclaimer
 
