@@ -1,15 +1,10 @@
 # Copyright Westside Consulting LLC, Ann Arbor, MI, USA, 2012
 
-ENV['RACK_ENV'] = 'test'
+$: << './lib'
 
-require 'rubygems'
-require 'bundler/setup'
-Bundler.require(:test)
 require 'capybara/cucumber'
-require 'accounts'
 require 'test/web_app'
 
-#Capybara.app = Sinatra::Application::new
 Capybara.app = MyWebApp
 
 class AccountsWorld

@@ -10,28 +10,6 @@ module Accounts
 
   class Server < Sinatra::Base
 
-    # TODO - This uses a cookie.
-    # You might want to replace this with something like Rack::Session::Pool
-    enable :sessions
-
-    configure :development do
-      Mail.defaults do
-        delivery_method Mail::SingleFileDelivery::Agent, :filename => '/tmp/mail-test-fifo'
-      end
-      enable :logging
-    end
-
-    configure :test do
-      DataMapper.auto_migrate!  # empty database
-      STDERR.puts "called DataMapper.auto_migrate!"
-
-      Mail.defaults do
-        delivery_method(:test)
-        Mail::TestMailer.deliveries = MailStoreAgent.new
-      end
-      enable :logging
-    end
-
     helpers do
       require 'accounts/helpers.rb'
       include ::Accounts::Helpers

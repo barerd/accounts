@@ -2,12 +2,23 @@
 
 $: << './lib'
 
+require 'rubygems'
+#require 'bundler/setup'
+require 'bundler'
+Bundler.require(:test)
 require 'accounts'
-require 'accounts/model'
-require 'sinatra/base'
 
 class MyWebApp < Sinatra::Base
   use Accounts::Server;
+
+  DataMapper.auto_migrate!  # empty database
+  STDERR.puts "WARNING: called DataMapper.auto_migrate! to clear database"
+
+  enable :logging
+
+  # Web app class must define this.
+  # In a production environment you might want to replace this with something like Rack::Session::Pool
+  enable :sessions
 
   not_found do
     %Q{Page not found.  Go to <a href="home">home page</a>.}
@@ -17,11 +28,8 @@ class MyWebApp < Sinatra::Base
     "Access denied"
   end
 
-  before do
-  end
-
   get '/' do
-    "Welcome visitor!"
+    %Q{Welcome visitor!  Please <a href="/logon">log on</a>.}
   end
 
   get '/welcome' do
@@ -57,5 +65,18 @@ class MyWebApp < Sinatra::Base
     haml :change_email
   end
 
-  run! if app_file == $0
+  if app_file == $0
+    STDERR.puts "Running standalone"
+    # Run as stand-along web app
+    Mail.defaults do
+      delivery_method Mail::SingleFileDelivery::Agent, :filename => '/tmp/mail-test-fifo'
+    end
+    run!
+  else
+    # Probably running under Cucumber
+    Mail.defaults do
+      delivery_method(:test)
+      Mail::TestMailer.deliveries = MailStoreAgent.new
+    end
+  end
 end
