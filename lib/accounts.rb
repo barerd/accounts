@@ -12,7 +12,6 @@ module Accounts
     attr_accessor :post_forgot_password_response
     attr_accessor :changed_your_password_response
     attr_accessor :post_register_new_account_response 
-    attr_accessor :post_register_new_account_again_response  # Proc(email)
     attr_accessor :post_register_already_registered_response # Proc(email)
     attr_accessor :post_forgot_password_email_does_not_match_response  # Proc(email)
     attr_accessor :post_change_email_response
@@ -76,7 +75,7 @@ module Accounts
         return Accounts.post_register_already_registered_response[email]
       else
         send_change_password_link account
-        return Accounts.post_register_new_account_again_response[email]
+        return Accounts.post_register_new_account_response
       end
     end
 
@@ -107,7 +106,6 @@ module Accounts
       send_change_email_confirmation account, new_email
       send_change_email_notification account, new_email
       Accounts.post_change_email_response
-      "Check your e-mail."
     end
 
     get '/response-token/:token' do
@@ -120,9 +118,6 @@ Accounts.configure do |config|
   config.changed_your_password_response = "You have changed your password."
   config.redirect_after_logon = "/welcome"
   config.post_register_new_account_response = "Check your e-mail."
-  config.post_register_new_account_again_response = ->(email) {
-    "#{email} has already registered.  Check your e-mail to set your password."
-  }
   config.post_register_already_registered_response = ->(email) {
     %Q{#{email} is already registered.  You may <a href="/logon?email=#{email}"log on</a>.}
   }
