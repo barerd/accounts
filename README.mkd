@@ -43,7 +43,7 @@ Accounts::Server defines the following paths for your web-app:
 * POST '/change-email'
 
 Your app must provide the pages and forms that will post to these paths.
-See lib/test/web_app.rb for example of usage.
+See demo/web_app.rb for example of usage.
 That file could be your template for a new web-app that uses the accounts gem.
 
 *accounts* supports a very lean and minimal user-registration protocol.
