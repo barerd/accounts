@@ -3,7 +3,6 @@
 $: << './lib'
 
 require 'rubygems'
-#require 'bundler/setup'
 require 'bundler'
 Bundler.require(:test)
 require 'accounts'
@@ -71,6 +70,9 @@ class MyWebApp < Sinatra::Base
     Mail.defaults do
       delivery_method Mail::SingleFileDelivery::Agent, :filename => '/tmp/mail-test-fifo'
     end
+    require 'sinatra/reloader'
+    register Sinatra::Reloader
+    enable :reloader
     run!
   else
     # Probably running under Cucumber

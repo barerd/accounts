@@ -14,7 +14,7 @@ group :test do
   gem 'cucumber'
   gem 'rspec'
   gem 'rdoc'
-  gem 'sinatra-contrib', :require => 'sinatra/reloader'
+  gem 'sinatra-contrib'
   gem 'mail'
   gem 'mail-store-agent'
   gem 'mail-single_file_delivery'
