@@ -14,47 +14,16 @@ module Accounts
       end
     end
 
-    ADMIN_EMAIL ||= 'admin@accounts.test'
-
     def site
       scheme = request.env['rack.url_scheme']
       host = request.env['HTTP_HOST'] # includes port number
       "#{scheme}://#{host}"
     end
 
-    def send_registration_confirmation(account)
-      tok = ::Accounts::ActionToken.create({ :account => account, :action => 'reset password' })
-      link = "#{site}/response-token/#{tok.id}"
-      Mail.deliver do
-        from ADMIN_EMAIL
-        to account.email
-        subject 'Your e-mail is confirmed'
-        body %Q{You have registered for accounts.test.
-
-Follow this link to confirm your e-mail address: #{link}
-        }
-      end
-    end
-
     def send_change_password_link(account)
       tok = ::Accounts::ActionToken.create({ :account => account, :action => 'reset password' })
       link = "#{site}/response-token/#{tok.id}"
-      Mail.deliver do
-        from ADMIN_EMAIL
-        to account.email
-        subject 'How to change your password'
-        body "Follow this link to change your password: #{link}"
-      end
-      #STDERR.puts "Sent change password link to #{account.email}"
-    end
-
-    def send_change_password_confirmation(account)
-      Mail.deliver do
-        from ADMIN_EMAIL
-        to account.email
-        subject 'Your password has changed'
-        body "The password for #{account.email} has changed."
-      end
+      Accounts.deliver_change_password_link[account.email, link]
     end
 
     def send_change_email_confirmation(account, new_email)
@@ -64,43 +33,14 @@ Follow this link to confirm your e-mail address: #{link}
         :params => {:new_email => new_email}
       })
       link = "#{site}/response-token/#{tok.id}"
-      Mail.deliver do
-        from ADMIN_EMAIL
-        to new_email
-        subject 'You requested to change your e-mail'
-        body %Q{You have requested to change your e-mail to #{new_email}."
-
-You must visit this link to confirm: #{link}
-
-#{account.email} has also been sent a notification e-mail.
-        }
-      end
-    end
-
-    def send_change_email_notification(account, new_email)
-      Mail.deliver do
-        from ADMIN_EMAIL
-        to account.email
-        subject 'You requested to change your e-mail'
-        body %Q{You have requested to change your e-mail to #{new_email}."
-
-An e-mail has been sent to #{new_email}.
-
-Please open that mail and follow the instructions.
-        }
-      end
+      Accounts.deliver_change_email_confirmation[account.email, new_email, link]
     end
 
     def on_email_confirmed(account)
       account.status << :email_confirmed
       account.taint! :status  # taint!() defined in model.rb
       account.save
-      Mail.deliver do
-        from ADMIN_EMAIL
-        to ADMIN_EMAIL
-        subject 'new account has confirmed e-mail'
-        body "#{account.email} has registered and confirmed"
-      end
+      Accounts.new_account_admin_notification[account.email]
     end
 
     def respond_to_token(id)
@@ -140,7 +80,9 @@ Please open that mail and follow the instructions.
     def register_new_account(email)
       account = ::Accounts::Account.create ({ :email => email })
       account.saved? or return "We are unable to register you at this time.  Please try again later."
-      send_registration_confirmation account
+      tok = ::Accounts::ActionToken.create({ :account => account, :action => 'reset password' })
+      link = "#{site}/response-token/#{tok.id}"
+      Accounts.deliver_registration_confirmation[account.email, link]
     end
   end
 end
