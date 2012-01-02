@@ -46,7 +46,7 @@ Accounts.configure do |config|
   config.admin_email = 'admin@accounts.test'
 
   config.post_forgot_password_email_does_not_match_response = ->(email) {
-    "#{email} does not match any account" 
+    %Q{#{email} does not match any account.  You may <a href="/register">register here</a>.}
   }
 
   config.post_register_already_registered_response = ->(email) {

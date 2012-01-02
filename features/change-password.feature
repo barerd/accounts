@@ -13,8 +13,8 @@ Feature: Users can change their passwords
 
   Scenario: Alice changes her password
     Given "alice@wunder.land" opens an email containing "/response-token/"
-    When she visits link from email
-    Then alice should see "Change Password"
+    Then she visits link from email
+    And she should see "Change Password"
     And she fills in "password" with "caterpillar" 
     And she fills in "password2" with "caterpillar" 
     And she presses "Submit"
@@ -62,12 +62,12 @@ Feature: Users can change their passwords
     And she fills in "email" with "alice@wunder.land" 
     And she fills in "password" with "caterpillar"
     And she presses "Submit"
-    And she should not see "Welcome alice@wunder.land"
+    Then she should not see "Welcome alice@wunder.land"
 
   Scenario: Only authenticated users can change their password
     Given I have unregistered "dormouse@alice.com"
     When he visits "/change-password"
-    And he should not see "Change Password"
+    Then he should not see "Change Password"
 
   Scenario: Alice forgets her password
     Given Alice visits "/forgot-password"
@@ -86,4 +86,4 @@ Feature: Users can change their passwords
     Given MadHatter visits "/forgot-password"
     When he fills in "email" with "madhatter@wunder.land" 
     And he presses "Submit"
-    Then he should see "madhatter@wunder.land is not registered."
+    Then he should see "madhatter@wunder.land does not match any account"

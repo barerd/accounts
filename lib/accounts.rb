@@ -25,7 +25,7 @@ module Accounts
         redirect to Accounts.redirect_after_logon
       else
         session[:account_id] = nil
-        return 403
+        halt 403
       end
     end
 
@@ -35,39 +35,38 @@ module Accounts
       case
       when !account
         register_new_account email
-        return Accounts.post_register_new_account_response
+        halt Accounts.post_register_new_account_response
       when account.status.include?(:email_confirmed)
-        return Accounts.post_register_already_registered_response[email]
-      else
-        send_change_password_link account
-        return Accounts.post_register_new_account_response
+        halt Accounts.post_register_already_registered_response[email]
       end
+      send_change_password_link account
+      Accounts.post_register_new_account_response
     end
 
     post '/forgot-password' do
       email = params[:email]
       account = ::Accounts::Account.first({ :email => email }) \
-        or return Accounts.post_forgot_password_email_does_not_match_response
+        or halt Accounts.post_forgot_password_email_does_not_match_response[email]
       send_change_password_link account
       Accounts.post_forgot_password_response
     end
 
     post '/change-password' do
-      return 403 unless session[:account_id]
+      halt 403 unless session[:account_id]
       account = ::Accounts::Account.get(session[:account_id]) \
-        or return 403
+        or halt 403
       account.set_password params[:password]
       Accounts.deliver_change_password_confirmation[account.email]
       Accounts.changed_your_password_response
     end
 
     post '/change-email' do
-      return 403 unless session[:account_id]
+      halt 403 unless session[:account_id]
       account = ::Accounts::Account.get(session[:account_id]) \
-        or return 403
+        or halt 403
       new_email = params[:email]
       ::Accounts::Account.count(:email => new_email) == 0 \
-        or return "#{new_email} is already taken"
+        or halt "#{new_email} is already taken"
       send_change_email_confirmation account, new_email
       Accounts.deliver_change_email_notification[account.email, new_email]
       Accounts.post_change_email_response
