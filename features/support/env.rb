@@ -1,6 +1,6 @@
 # Copyright Westside Consulting LLC, Ann Arbor, MI, USA, 2012
 
-require './lib/test/web_app'
+require './demo/web_app'
 require 'capybara/cucumber'
 
 Capybara.app = MyWebApp
