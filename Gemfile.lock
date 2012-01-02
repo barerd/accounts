@@ -1,3 +1,17 @@
+PATH
+  remote: .
+  specs:
+    accounts (0.0.1)
+      data_mapper
+      dm-postgres-adapter
+      dm-timestamps
+      dm-types
+      logger
+      mail
+      rack (~> 1.3.6)
+      sinatra
+      thin
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -142,20 +156,12 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  accounts!
   capybara
   cucumber
-  data_mapper
-  dm-postgres-adapter
-  dm-timestamps
-  dm-types
   haml
-  logger
-  mail
   mail-single_file_delivery
   mail-store-agent
-  rack (~> 1.3.6)
   rdoc
   rspec
-  sinatra
   sinatra-contrib
-  thin

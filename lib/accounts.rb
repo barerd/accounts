@@ -1,17 +1,15 @@
 # Copyright Westside Consulting LLC, Ann Arbor, MI, USA, 2012
 
-require 'rubygems'
-require 'bundler/setup'
-Bundler.require(:default, :test)
+require 'accounts/version'
 require 'accounts/model'
 require 'accounts/configure'
+require 'accounts/helpers'
 
 module Accounts
 
-  class Server < Sinatra::Base
+  class Server < ::Sinatra::Base
 
     helpers do
-      require 'accounts/helpers.rb'
       include ::Accounts::Helpers
     end
 

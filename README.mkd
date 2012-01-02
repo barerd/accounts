@@ -1,7 +1,7 @@
 # Accounts
 
 ## Summary
-*accounts* is a demo website that offers than the basic user-account management
+*accounts* is a website plug-in that offers than the basic user-account management
 and authentication features that many sites need.
 
 ## Background
@@ -31,11 +31,20 @@ others just want an e-mail -
 but the features and use-cases are nearly identical.
 
 ## Description
-*accounts* is a demo website that offers than the 
-basic user-account management and authentication features that many sites need.
-Its pages are bare-bones, terse and with no styling whatsoever.
-It is intended by its author 
-to be copied and used as a template in other sites that require these same features.
+*accounts* is a website plug-in that offers than the basic user-account management
+and authentication features that many sites need.
+
+Accounts::Server defines the following paths for your web-app:
+
+* POST '/logon'
+* POST '/register'
+* POST '/forgot-password'
+* POST '/change-password'
+* POST '/change-email'
+
+Your app must provide the pages and forms that will post to these paths.
+See lib/test/web_app.rb for example of usage.
+That file could be your template for a new web-app that uses the accounts gem.
 
 *accounts* supports a very lean and minimal user-registration protocol.
 
@@ -56,32 +65,28 @@ are kept in a separate resource than Account that can be joined with Account.
 1. Users may change their e-mail address, thus changing their primary identity.  
 This is justified because people do change their e-mail address from time to time 
 and should not have to re-register with a new identity.
+Changing their e-mail will not break associations to other tables you have defined through *account_id*.
 
 ## Usage
-Accounts::Server defines the following paths for your web-app:
-
-* POST '/logon'
-* POST '/register'
-* POST '/forgot-password'
-* POST '/change-password'
-* POST '/change-email'
-
-Your app must provide the pages and forms that will post to these paths.
-See lib/test/web_app.rb for example of usage.
-This file could be your template for a new web-app that uses the accounts gem.
-
 See lib/accounts/configure.rb for list of configurable options
 and for example of how to set them in order to customize
 the pages and e-mails for your app.
-
-Accounts is agnostic about what templating engine and mail engine your app uses,
-although the default configuration uses http://github.com/mikel/mail.
 
 Accounts defines several tables for keeping track of user accounts.
 These do not include any personal or contact info other than a person's e-mail address.
 If your app needs to maintain other info about it's subscribers,
 you can create a separate table and join it with Accounts::Account defined in lib/accounts/model.rb
 in a one-to-one relationship.
+
+Accounts is agnostic about what templating engine engine your app uses,
+as it does not use one itself,
+but merely outputs shorts strings as responses that you may customize
+by replacing them with your own strings or with Procs that use a template engine.
+
+Accounts is agnostic about what mail engine engine your app uses,
+although the default configuration uses http://github.com/mikel/mail.
+If you wish to use a different mail engine,
+you may do so in the Proc objects you provide to Accounts::configure.
 
 ## Status
 Can't get sinatra-reloader to work since I converted it into a modular app.

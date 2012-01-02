@@ -1,14 +1,29 @@
 # Copyright Westside Consulting LLC, Ann Arbor, MI, USA, 2012
 
-$: << './lib'
-
+require 'pp'
 require 'rubygems'
-require 'bundler'
-Bundler.require(:test)
+require 'bundler/setup'
+#Bundler.require(:default, :test, :development) # didn't work
+
+# development
+require 'mail-store-agent'
+require 'mail-single_file_delivery'
+require 'haml'
+
+# runtime
+require 'rack'
+require 'sinatra'
+require 'thin'
+require 'data_mapper'
+require 'dm-types'
+require 'dm-timestamps'
+require 'dm-postgres-adapter'
+require 'mail'
+require 'logger'
 require 'accounts'
 
 class MyWebApp < Sinatra::Base
-  use Accounts::Server;
+  use ::Accounts::Server;
 
   DataMapper.auto_migrate!  # empty database
   STDERR.puts "WARNING: called DataMapper.auto_migrate! to clear database"

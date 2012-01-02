@@ -1,9 +1,7 @@
 # Copyright Westside Consulting LLC, Ann Arbor, MI, USA, 2012
 
-$: << './lib'
-
+require './lib/test/web_app'
 require 'capybara/cucumber'
-require 'test/web_app'
 
 Capybara.app = MyWebApp
 

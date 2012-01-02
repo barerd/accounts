@@ -1,9 +1,8 @@
 # Copyright Westside Consulting LLC, Ann Arbor, MI, USA, 2012
 
-#require "bundler/gem_tasks"
-require 'rubygems'
-require 'bundler'
-Bundler.require
+require "bundler/gem_tasks"
+
+#=begin
 require 'rspec/core/rake_task'
 require 'cucumber/rake/task'
 
@@ -22,3 +21,4 @@ Cucumber::Rake::Task.new(:features) do |t|
   t.cucumber_opts += %W[-t #{tag}] if tag
   #STDERR.puts t.cucumber_opts.inspect
 end
+#=end
