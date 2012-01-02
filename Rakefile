@@ -1,3 +1,5 @@
+# Copyright Westside Consulting LLC, Ann Arbor, MI, USA, 2012
+
 #require "bundler/gem_tasks"
 require 'rubygems'
 require 'bundler'

@@ -13,9 +13,20 @@ module Accounts
     attr_accessor :deliver_change_password_link # Proc(email, link)
     attr_accessor :deliver_change_password_confirmation # Proc(email)
     attr_accessor :deliver_change_email_confirmation # Proc(old_email, new_email, link)
-    attr_accessor :new_account_admin_notification #Proc(email)
+    attr_accessor :deliver_new_account_admin_notification #Proc(email)
     attr_accessor :deliver_change_email_notification #Proc(old_email, new_email)
 
+    ##
+    # Configure Accounts with your custom pages and e-mails.
+    #
+    #    Accounts.configure do |config|
+    #      config.changed_your_password_response = "You have changed your password."
+    #      config.redirect_after_logon = "/welcome"
+    #    end
+    #
+    # See lib/accounts/configure.rb for complete example.
+    #
+    # All config params that are strings may be replaced with Procs.
     def configure
       yield self
     end
@@ -28,15 +39,17 @@ Accounts.configure do |config|
   config.changed_your_password_response = "You have changed your password."
   config.redirect_after_logon = "/welcome"
   config.post_register_new_account_response = "Check your e-mail."
-  config.post_register_already_registered_response = ->(email) {
-    %Q{#{email} is already registered.  You may <a href="/logon?email=#{email}"log on</a>.}
-  }
   config.post_forgot_password_response = "Check your e-mail to change your password."
+  config.post_change_email_response = "Check your e-mail."
+  config.admin_email = 'admin@accounts.test'
+
   config.post_forgot_password_email_does_not_match_response = ->(email) {
     "#{email} does not match any account" 
   }
-  config.post_change_email_response = "Check your e-mail."
-  config.admin_email = 'admin@accounts.test'
+
+  config.post_register_already_registered_response = ->(email) {
+    %Q{#{email} is already registered.  You may <a href="/logon?email=#{email}"log on</a>.}
+  }
 
   config.deliver_registration_confirmation = ->(email, link) {
     Mail.deliver do
@@ -81,7 +94,7 @@ Follow this link to confirm your e-mail address: #{link}
       }
     end
   }
-  config.new_account_admin_notification = ->(email) {
+  config.deliver_new_account_admin_notification = ->(email) {
     Mail.deliver do
       from Accounts.admin_email
       to Accounts.admin_email

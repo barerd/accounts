@@ -1,3 +1,5 @@
+# Copyright Westside Consulting LLC, Ann Arbor, MI, USA, 2012
+
 @change-email
 Feature: Users can change their e-mails
 

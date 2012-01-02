@@ -1,3 +1,5 @@
+# Copyright Westside Consulting LLC, Ann Arbor, MI, USA, 2012
+
 module Accounts
   module Helpers
     class ::Accounts::AccountsError < Exception
@@ -40,7 +42,7 @@ module Accounts
       account.status << :email_confirmed
       account.taint! :status  # taint!() defined in model.rb
       account.save
-      Accounts.new_account_admin_notification[account.email]
+      Accounts.deliver_new_account_admin_notification[account.email]
     end
 
     def respond_to_token(id)

@@ -18,6 +18,7 @@ module Accounts
       Mail.defaults do
         delivery_method Mail::SingleFileDelivery::Agent, :filename => '/tmp/mail-test-fifo'
       end
+      enable :logging
     end
 
     configure :test do
@@ -28,6 +29,7 @@ module Accounts
         delivery_method(:test)
         Mail::TestMailer.deliveries = MailStoreAgent.new
       end
+      enable :logging
     end
 
     helpers do

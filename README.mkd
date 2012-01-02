@@ -62,9 +62,11 @@ Work-in-progress.
 
 ## Disclaimer
 
+This package and all its contents are provided provided AS-IS, for demonstration purposes.
 Lawrence Siden and Westside Consulting LLC 
-make no warranty about this demo-site's security, correctness or fitness for commercial use.
+make no warranty about this package's security, correctness or fitness for commercial use.
 
 ## License
+* Copyright <a href="http://westside-consulting.com/">Westside Consulting LLC</a>, Ann Arbor, MI, USA, 2012
 * <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/"><img alt="Creative Commons License" style="border-width:0" src="http://i.creativecommons.org/l/by-sa/3.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" href="http://purl.org/dc/dcmitype/Text" property="dct:title" rel="dct:type">accounts</span> by <a xmlns:cc="http://creativecommons.org/ns#" href="http://westside-consulting.com/" property="cc:attributionName" rel="cc:attributionURL">Lawrence Siden</a> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/3.0/">Creative Commons Attribution-ShareAlike 3.0 Unported License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/lsiden" rel="dct:source">github.com</a>.
 * [Ruby License](http://www.ruby-lang.org/en/LICENSE.txt)

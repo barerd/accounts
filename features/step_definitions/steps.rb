@@ -1,3 +1,5 @@
+# Copyright Westside Consulting LLC, Ann Arbor, MI, USA, 2012
+
 When /^page has "([^"]*)"$/ do |arg1|
   #STDERR.puts page.body
   page.body.should have_selector(arg1)
@@ -14,7 +16,6 @@ end
 
 When /^\w+ visits link from email$/ do
   @new_mail.should_not be_nil
-STDERR.puts @new_mail.body
   @new_mail.body.to_s =~ /(http\S+)/
   link = $1
   link.should_not be_nil

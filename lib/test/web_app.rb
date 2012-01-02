@@ -1,5 +1,7 @@
 # Copyright Westside Consulting LLC, Ann Arbor, MI, USA, 2012
 
+$: << './lib'
+
 require 'accounts'
 require 'accounts/model'
 require 'sinatra/base'
@@ -54,4 +56,6 @@ class MyWebApp < Sinatra::Base
     return 403 unless session[:account_id]
     haml :change_email
   end
+
+  run! if app_file == $0
 end
