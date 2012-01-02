@@ -1,3 +1,5 @@
+# Copyright Westside Consulting LLC, Ann Arbor, MI, USA, 2012
+
 module Accounts
   class << self 
     attr_accessor :page_not_found # String
@@ -58,7 +60,7 @@ Accounts.configure do |config|
       subject 'Your e-mail is confirmed'
       body %Q{You have registered for accounts.test.
 
-Follow this link to confirm your e-mail address: #{link}
+Follow this link to confirm your e-mail address and set your password: #{link}
       }
     end
   }
