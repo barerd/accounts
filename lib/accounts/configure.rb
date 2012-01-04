@@ -50,7 +50,7 @@ Accounts.configure do |config|
   }
 
   config.post_register_already_registered_response = ->(email) {
-    %Q{#{email} is already registered.  You may <a href="/logon?email=#{email}"log on</a>.}
+    %Q{#{email} is already registered.  You may <a href="/logon?email=#{email}">log on</a>.}
   }
 
   config.deliver_registration_confirmation = ->(email, link) {
