@@ -1,6 +1,5 @@
 # Copyright Westside Consulting LLC, Ann Arbor, MI, USA, 2012
 
-require 'pp'
 require 'rubygems'
 require 'bundler/setup'
 #Bundler.require(:default, :test, :development) # didn't work
@@ -9,6 +8,8 @@ require 'bundler/setup'
 require 'mail-store-agent'
 require 'mail-single_file_delivery'
 require 'haml'
+#require 'sinatra/reloader'
+require 'pp'
 
 # runtime
 require 'rack'
@@ -22,17 +23,48 @@ require 'mail'
 require 'logger'
 require 'accounts'
 
+DataMapper.auto_migrate!  # empty database
+STDERR.puts "WARNING: called DataMapper.auto_migrate! to clear database"
+
 class MyWebApp < Sinatra::Base
+
   use ::Accounts::Server;
 
-  DataMapper.auto_migrate!  # empty database
-  STDERR.puts "WARNING: called DataMapper.auto_migrate! to clear database"
+    if app_file == $0
+      # Run as stand-along web app
+      Mail.defaults do
+        delivery_method Mail::SingleFileDelivery::Agent, :filename => '/tmp/mail-test-fifo'
+      end
+      STDERR.puts "Mail messages are going to /tmp/mail-test-fifo"
+    else
+      # Probably running under Cucumber
+      Mail.defaults do
+        delivery_method(:test)
+        Mail::TestMailer.deliveries = MailStoreAgent.new
+      end
+      STDERR.puts "Mail messages are going to Mail::TestMailer.deliveries for access by test scripts"
+    end
 
-  enable :logging
+  configure do
 
-  # Web app class must define this.
-  # In a production environment you might want to replace this with something like Rack::Session::Pool
-  enable :sessions
+    #register Sinatra::Reloader
+    enable :logging
+
+    # Web app class that uses Accounts::Server must define this.
+
+    # This does not work
+=begin
+  use Rack::Session::Cookie, :key => 'rack.session',
+    :path => '/',
+    :expire_after => 14400, # In seconds
+    :secret => 'secret_stuff'
+=end
+    enable :sessions # this breaks with Rack 1.4.0
+  end
+
+  before do
+    #STDERR.puts session.inspect
+  end
 
   not_found do
     %Q{Page not found.  Go to <a href="home">home page</a>.}
@@ -79,21 +111,5 @@ class MyWebApp < Sinatra::Base
     haml :change_email
   end
 
-  if app_file == $0
-    STDERR.puts "Running standalone"
-    # Run as stand-along web app
-    Mail.defaults do
-      delivery_method Mail::SingleFileDelivery::Agent, :filename => '/tmp/mail-test-fifo'
-    end
-    require 'sinatra/reloader'
-    register Sinatra::Reloader
-    enable :reloader
-    run!
-  else
-    # Probably running under Cucumber
-    Mail.defaults do
-      delivery_method(:test)
-      Mail::TestMailer.deliveries = MailStoreAgent.new
-    end
-  end
+  run! if app_file == $0
 end
