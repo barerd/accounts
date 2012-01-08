@@ -8,12 +8,11 @@ require 'bundler/setup'
 require 'mail-store-agent'
 require 'mail-single_file_delivery'
 require 'haml'
-#require 'sinatra/reloader'
 require 'pp'
 
 # runtime
 require 'rack'
-require 'sinatra'
+require 'sinatra/base'
 require 'thin'
 require 'data_mapper'
 require 'dm-types'
@@ -31,13 +30,15 @@ class MyWebApp < Sinatra::Base
   use ::Accounts::Server;
 
     if app_file == $0
-      # Run as stand-along web app
+      # Invoced as a stand-along web app
+
       Mail.defaults do
         delivery_method Mail::SingleFileDelivery::Agent, :filename => '/tmp/mail-test-fifo'
       end
       STDERR.puts "Mail messages are going to /tmp/mail-test-fifo"
     else
       # Probably running under Cucumber
+
       Mail.defaults do
         delivery_method(:test)
         Mail::TestMailer.deliveries = MailStoreAgent.new
@@ -47,7 +48,6 @@ class MyWebApp < Sinatra::Base
 
   configure do
 
-    #register Sinatra::Reloader
     enable :logging
 
     # Web app class that uses Accounts::Server must define this.
@@ -60,6 +60,12 @@ class MyWebApp < Sinatra::Base
     :secret => 'secret_stuff'
 =end
     enable :sessions # this breaks with Rack 1.4.0
+
+    if app_file == $0
+      require 'sinatra/reloader'
+      register Sinatra::Reloader
+      enable :reloader
+    end
   end
 
   before do
@@ -111,5 +117,5 @@ class MyWebApp < Sinatra::Base
     haml :change_email
   end
 
-  run! if app_file == $0
+  run! if !running? && app_file == $0
 end
