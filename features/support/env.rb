@@ -1,7 +1,8 @@
 # Copyright Westside Consulting LLC, Ann Arbor, MI, USA, 2012
 
 require './demo/web_app'
-require 'capybara/cucumber'
+require 'bundler'
+Bundler.require(:cucumber)
 
 Capybara.app = MyWebApp
 

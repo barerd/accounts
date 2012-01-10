@@ -1,9 +1,7 @@
 # Copyright Westside Consulting LLC, Ann Arbor, MI, USA, 2012
 
-require 'data_mapper'
-require 'dm-types/enum'
-require 'dm-types/flag'
 require 'digest/sha2'
+require 'data_mapper'
 
 DataMapper.setup(:default, ENV['DATABASE_URL'] || 'postgres:accounts')
 DataMapper::Property::String.length(255)

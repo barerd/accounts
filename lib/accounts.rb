@@ -1,14 +1,9 @@
 # Copyright Westside Consulting LLC, Ann Arbor, MI, USA, 2012
 
-require 'rubygems'
-require 'bundler'
-Bundler.require
-
 require 'accounts/version'
 require 'accounts/model'
 require 'accounts/configure'
 require 'accounts/helpers'
-require 'sinatra/base'
 
 module Accounts
 

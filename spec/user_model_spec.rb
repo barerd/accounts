@@ -1,6 +1,3 @@
-$: << '../lib'
-
-require 'rubygems'
 require 'rspec'
 
 # suppress excessive warnings from DataMapper libraries

@@ -1,21 +1,8 @@
 # Copyright Westside Consulting LLC, Ann Arbor, MI, USA, 2012
 
-require 'rubygems'
+require 'bundler/setup'
+Bundler.require(:default, :demo)
 
-# runtime
-require 'sinatra/base'
-require 'data_mapper'
-require 'dm-types'
-require 'dm-timestamps'
-require 'dm-postgres-adapter'
-require 'mail'
-require 'logger'
-require 'accounts'
-
-# development
-require 'mail-store-agent'
-require 'mail-single_file_delivery'
-require 'haml'
 require 'pp'
 
 DataMapper.auto_migrate!  # empty database
@@ -47,15 +34,7 @@ class MyWebApp < Sinatra::Base
     enable :logging
 
     # Web app class that uses Accounts::Server must define this.
-
-    # This does not work
-=begin
-  use Rack::Session::Cookie, :key => 'rack.session',
-    :path => '/',
-    :expire_after => 14400, # In seconds
-    :secret => 'secret_stuff'
-=end
-    enable :sessions # this breaks with Rack 1.4.0
+    enable :sessions # this breaks with Rack 1.4.0; fixed with 08e0eb07ae55
 
     if app_file == $0
       require 'sinatra/reloader'
