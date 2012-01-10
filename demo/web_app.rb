@@ -1,19 +1,9 @@
 # Copyright Westside Consulting LLC, Ann Arbor, MI, USA, 2012
 
 require 'rubygems'
-require 'bundler/setup'
-#Bundler.require(:default, :test, :development) # didn't work
-
-# development
-require 'mail-store-agent'
-require 'mail-single_file_delivery'
-require 'haml'
-require 'pp'
 
 # runtime
-require 'rack'
 require 'sinatra/base'
-require 'thin'
 require 'data_mapper'
 require 'dm-types'
 require 'dm-timestamps'
@@ -21,6 +11,12 @@ require 'dm-postgres-adapter'
 require 'mail'
 require 'logger'
 require 'accounts'
+
+# development
+require 'mail-store-agent'
+require 'mail-single_file_delivery'
+require 'haml'
+require 'pp'
 
 DataMapper.auto_migrate!  # empty database
 STDERR.puts "WARNING: called DataMapper.auto_migrate! to clear database"

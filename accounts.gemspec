@@ -31,6 +31,16 @@ Your app must provide the pages and forms that will post to these paths.
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
 
+  s.add_runtime_dependency 'data_mapper'
+  s.add_runtime_dependency 'dm-types'
+  s.add_runtime_dependency 'dm-timestamps'
+  s.add_runtime_dependency 'dm-postgres-adapter'
+  s.add_runtime_dependency 'mail'
+  s.add_runtime_dependency 'rack'
+  s.add_runtime_dependency 'sinatra'
+  s.add_runtime_dependency 'thin'
+  s.add_runtime_dependency 'logger'
+
   s.add_development_dependency 'capybara'
   s.add_development_dependency 'cucumber'
   s.add_development_dependency 'rspec'
@@ -39,14 +49,4 @@ Your app must provide the pages and forms that will post to these paths.
   s.add_development_dependency 'mail-store-agent'
   s.add_development_dependency 'mail-single_file_delivery'
   s.add_development_dependency 'haml'
-
-  s.add_runtime_dependency 'rack', "~>1.3.6" #  https://github.com/rack/rack/issues/299
-  s.add_runtime_dependency 'sinatra'
-  s.add_runtime_dependency 'thin'
-  s.add_runtime_dependency 'data_mapper'
-  s.add_runtime_dependency 'dm-types'
-  s.add_runtime_dependency 'dm-timestamps'
-  s.add_runtime_dependency 'dm-postgres-adapter'
-  s.add_runtime_dependency 'mail'
-  s.add_runtime_dependency 'logger'
 end
